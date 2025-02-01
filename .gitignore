@@ -1,0 +1,13 @@
+.env
+
+.idea/
+.vscode/
+.vs/
+
+dist/
+build/
+obj/
+debug/
+
+.DS_Store
+Thumbs.db
