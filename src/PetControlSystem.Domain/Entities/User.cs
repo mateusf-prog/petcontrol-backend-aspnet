@@ -1,5 +1,4 @@
-﻿
-namespace PetControlSystem.Domain.Entities
+﻿namespace PetControlSystem.Domain.Entities
 {
     public class User : Entity
     {
@@ -10,5 +9,6 @@ namespace PetControlSystem.Domain.Entities
         public string? Document { get; private set; }
         public Address? Address { get; private set; }
         public UserType Type { get; private set; }
+        public DocumentType DocumentType { get; private set; }
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace PetControlSystem.Domain.Entities
 {
-    public enum Gender
+    public enum DocumentType
     {
-        Male = 1,
-        Female
+        PF = 1,
+        PJ
     }
 }

@@ -1,5 +1,4 @@
-﻿
-namespace PetControlSystem.Domain.Entities
+﻿namespace PetControlSystem.Domain.Entities
 {
     public abstract class Entity
     {
