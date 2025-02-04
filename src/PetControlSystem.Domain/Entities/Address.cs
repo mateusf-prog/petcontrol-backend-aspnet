@@ -1,6 +1,6 @@
 ﻿namespace PetControlSystem.Domain.Entities
 {
-    public class Address
+    public class Address : Entity
     {
         public string? Street { get; private set; }
         public string? Number { get; private set; }
