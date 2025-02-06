@@ -6,6 +6,8 @@ namespace PetControlSystem.Domain.Interfaces
     {
         Task Add(Appointment appointment);
         Task Update(Appointment appointment);
-        Task Delete(Appointment appointment);
+        Task Delete(Guid id);
+        Task<Appointment> GetById(Guid id);
+        Task<IEnumerable<Appointment>> GetAll();
     }
 }

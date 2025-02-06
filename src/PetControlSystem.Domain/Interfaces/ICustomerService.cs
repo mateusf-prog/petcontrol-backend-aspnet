@@ -6,6 +6,7 @@ namespace PetControlSystem.Domain.Interfaces
     {
         Task Add(Customer customer);
         Task Update(Customer customer);
-        Task Delete(Customer customer);
+        Task<Customer> GetById(Guid id);
+        Task Delete(Guid id);
     }
 }
