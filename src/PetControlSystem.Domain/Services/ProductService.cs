@@ -1,4 +1,5 @@
 ﻿using PetControlSystem.Domain.Entities;
+using PetControlSystem.Domain.Entities.Validations;
 using PetControlSystem.Domain.Interfaces;
 
 namespace PetControlSystem.Domain.Services
@@ -14,6 +15,8 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Add(Product product)
         {
+            if (!ExecuteValidation(new ProductValidation(), product)) return;
+
             await _productRepository.Add(product);
         }
 
@@ -36,6 +39,8 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Update(Product product)
         {
+            if (!ExecuteValidation(new ProductValidation(), product)) return;
+
             await _productRepository.Update(product);
         }
 

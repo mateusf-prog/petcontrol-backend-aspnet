@@ -1,4 +1,5 @@
 ﻿using PetControlSystem.Domain.Entities;
+using PetControlSystem.Domain.Entities.Validations;
 using PetControlSystem.Domain.Interfaces;
 
 namespace PetControlSystem.Domain.Services
@@ -14,6 +15,8 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Add(Appointment appointment)
         {
+            if (!ExecuteValidation(new AppointmentValidation(), appointment)) return;
+
             await _appointmentRepository.Add(appointment);
         }
 
@@ -24,6 +27,8 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Update(Appointment appointment)
         {
+            if (!ExecuteValidation(new AppointmentValidation(), appointment)) return;
+
             await _appointmentRepository.Update(appointment);
         }
 

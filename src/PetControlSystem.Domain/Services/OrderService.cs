@@ -1,4 +1,5 @@
 ﻿using PetControlSystem.Domain.Entities;
+using PetControlSystem.Domain.Entities.Validations;
 using PetControlSystem.Domain.Interfaces;
 
 namespace PetControlSystem.Domain.Services
@@ -14,6 +15,8 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Add(Order order)
         {
+            if (!ExecuteValidation(new OrderValidation(), order)) return;
+
             await _orderRepository.Add(order);
         }
 

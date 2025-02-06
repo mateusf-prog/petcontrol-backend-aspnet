@@ -1,4 +1,5 @@
 ﻿using PetControlSystem.Domain.Entities;
+using PetControlSystem.Domain.Entities.Validations;
 using PetControlSystem.Domain.Interfaces;
 
 namespace PetControlSystem.Domain.Services
@@ -14,6 +15,8 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Add(User user)
         {
+            if(!ExecuteValidation(new UserValidation(), user)) return;
+
             await _userRepository.Add(user);
         }
 
@@ -28,11 +31,15 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Update(User user)
         {
+            if (!ExecuteValidation(new UserValidation(), user)) return;
+
             await _userRepository.Update(user);
         }
 
-        public Task UpdatePassword(User user, string newPassword)
+        public async Task UpdatePassword(User user, string newPassword)
         {
+            if (!ExecuteValidation(new UserValidation(), user)) return;
+
             throw new NotImplementedException();
         }
 

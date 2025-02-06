@@ -1,4 +1,5 @@
 ﻿using PetControlSystem.Domain.Entities;
+using PetControlSystem.Domain.Entities.Validations;
 using PetControlSystem.Domain.Interfaces;
 
 namespace PetControlSystem.Domain.Services
@@ -14,6 +15,8 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Add(Customer customer)
         {
+            if (ExecuteValidation(new CustomerValidation(), customer)) return;
+
             await _customerRepository.Add(customer);
         }
 
@@ -24,6 +27,8 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Update(Customer customer)
         {
+            if (ExecuteValidation(new CustomerValidation(), customer)) return;
+
             await _customerRepository.Update(customer);
         }
 
