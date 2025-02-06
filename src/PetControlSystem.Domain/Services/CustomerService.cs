@@ -27,9 +27,10 @@ namespace PetControlSystem.Domain.Services
             await _customerRepository.Update(customer);
         }
 
-        public async Task GetById(Guid id)
+        public async Task<Customer> GetById(Guid id)
         {
             await _customerRepository.GetById(id);
+            return null;
         }
 
         public void Dispose()
