@@ -7,7 +7,7 @@ namespace PetControlSystem.Domain.Interfaces
         Task Add(Product product);
         Task Update(Product product);
         Task Delete(Guid id);
-        Task<Product> GetById(Guid id);
-        Task<IEnumerable<Product>> GetAll();
+        Task<Product?> GetById(Guid id);
+        Task<IEnumerable<Product>?> GetAll();
     }
 }
