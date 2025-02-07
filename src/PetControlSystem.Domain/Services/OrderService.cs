@@ -17,6 +17,12 @@ namespace PetControlSystem.Domain.Services
         {
             if (!ExecuteValidation(new OrderValidation(), order)) return;
 
+            if (_orderRepository.GetById(order.Id) != null) 
+            {
+                Notify("There is already an order with this ID");
+                return;
+            }
+
             await _orderRepository.Add(order);
         }
 
@@ -25,16 +31,30 @@ namespace PetControlSystem.Domain.Services
             await _orderRepository.Remove(id);
         }
 
-        public async Task<Order> GetById(Guid id)
+        public async Task<Order?> GetById(Guid id)
         {
-            await _orderRepository.GetById(id);
-            return null;
+            var result = await _orderRepository.GetById(id);
+
+            if (result is null)
+            {
+                Notify("There is no order with this ID");
+                return null;
+            }
+
+            return result;
         }
 
-        public async Task<IEnumerable<Order>> GetAll()
+        public async Task<IEnumerable<Order>?> GetAll()
         {
-            await _orderRepository.GetAll();
-            return null;
+            var result = await _orderRepository.GetAll();
+
+            if (result is null)
+            {
+                Notify("There are no orders");
+                return null;
+            }
+
+            return result;
         }
 
         public void Dispose()

@@ -17,29 +17,67 @@ namespace PetControlSystem.Domain.Services
         {
             if (!ExecuteValidation(new ProductValidation(), product)) return;
 
+            if (_productRepository.GetById(product.Id) != null)
+            {
+                Notify("There is already a product with this ID");
+                return;
+            }
+
+            if (_productRepository.Get(p => p.Name == product.Name).Result.Any())
+            {
+                Notify("There is already a product with this name");
+                return;
+            }
+
             await _productRepository.Add(product);
         }
 
         public async Task Delete(Guid id)
         {
+            if (_productRepository.GetById(id) is null)
+            {
+                Notify("There is no product with this ID");
+                return;
+            }
+
             await _productRepository.Remove(id);
         }
 
-        public async Task<IEnumerable<Product>> GetAll()
+        public async Task<IEnumerable<Product>?> GetAll()
         {
-            await _productRepository.GetAll();
-            return null;
+            var result = await _productRepository.GetAll();
+
+            if(result is null)
+            {
+                Notify("There are no products");
+                return null;
+            }
+
+            return result;
         }
 
-        public async Task<Product> GetById(Guid id)
+        public async Task<Product?> GetById(Guid id)
         {
-            await _productRepository.GetById(id);
-            return null;
+            var result = await _productRepository.GetById(id);
+
+            if (result is null)
+            {
+                Notify("There are no products");
+                return null;
+            }
+
+            return result;
         }
 
         public async Task Update(Product product)
         {
             if (!ExecuteValidation(new ProductValidation(), product)) return;
+
+            if (_productRepository.GetById(product.Id) is null)
+            {
+                Notify("There is no product with this ID");
+                return;
+            }
 
             await _productRepository.Update(product);
         }

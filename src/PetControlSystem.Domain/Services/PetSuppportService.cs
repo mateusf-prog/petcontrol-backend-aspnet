@@ -22,24 +22,52 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Delete(Guid id)
         {
+            if (_petSupportRepository.GetById(id) is null) 
+            {
+                Notify("There is no pet support with this ID");
+                return;
+            }
+
             await _petSupportRepository.Remove(id);
         }
 
-        public async Task<IEnumerable<PetSupport>> GetAll()
+        public async Task<IEnumerable<PetSupport>?> GetAll()
         {
-            await _petSupportRepository.GetAll();
-            return null;
+            var result = await _petSupportRepository.GetAll();
+
+            if (result is null)
+            {
+                Notify("There are no pet supports");
+                return null;
+            }
+
+            return result;
         }
 
-        public async Task<PetSupport> GetById(Guid id)
+        public async Task<PetSupport?> GetById(Guid id)
         {
-            await _petSupportRepository.GetById(id);
-            return null;
+            var result = await _petSupportRepository.GetById(id);
+
+            if (result is null)
+            {
+                Notify("There is no pet support with this ID");
+                return null;
+            }
+
+            return result;
         }
 
         public async Task Update(PetSupport petSupport)
         {
             if (!ExecuteValidation(new PetSupportValidation(), petSupport)) return;
+
+            var result = await _petSupportRepository.GetById(petSupport.Id);
+
+            if (result is null)
+            {
+                Notify("There is no pet support with this ID");
+                return;
+            }
 
             await _petSupportRepository.Update(petSupport);
         }

@@ -17,11 +17,23 @@ namespace PetControlSystem.Domain.Services
         {
             if (!ExecuteValidation(new AppointmentValidation(), appointment)) return;
 
+            if (_appointmentRepository.GetById(appointment.Id) != null)
+            { 
+                Notify("There is already an appointment with this ID");
+                return;
+            }
+
             await _appointmentRepository.Add(appointment);
         }
 
         public async Task Delete(Guid id)
         {
+            if (_appointmentRepository.GetById(id) is null)
+            {
+                Notify("There is no appointment with this ID");
+                return;
+            }
+
             await _appointmentRepository.Remove(id);
         }
 
@@ -29,19 +41,40 @@ namespace PetControlSystem.Domain.Services
         {
             if (!ExecuteValidation(new AppointmentValidation(), appointment)) return;
 
+            var result = _appointmentRepository.GetById(appointment.Id);
+            if (result != null) 
+            {
+                Notify("There is no appointment with this ID");
+                return;
+            }
+
             await _appointmentRepository.Update(appointment);
         }
 
-        public async Task<Appointment> GetById(Guid id)
+        public async Task<Appointment?> GetById(Guid id)
         {
-            await _appointmentRepository.GetById(id);
-            return null;
+            var result = await _appointmentRepository.GetById(id);
+
+            if (result is null)
+            {
+                Notify("There is no appointment with this ID");
+                return null;
+            }
+
+            return result;
         }
 
-        public async Task<IEnumerable<Appointment>> GetAll()
+        public async Task<IEnumerable<Appointment>?> GetAll()
         {
-            await _appointmentRepository.GetAll();
-            return null;
+            var result = await _appointmentRepository.GetAll();
+
+            if (result is null)
+            {
+                Notify("There are no appointments");
+                return null;
+            }
+
+            return result;
         }
 
         public void Dispose()
