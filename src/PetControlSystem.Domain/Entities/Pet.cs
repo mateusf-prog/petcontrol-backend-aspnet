@@ -1,4 +1,6 @@
-﻿namespace PetControlSystem.Domain.Entities
+﻿using PetControlSystem.Domain.Entities.Enums;
+
+namespace PetControlSystem.Domain.Entities
 {
     public class Pet : Entity
     {

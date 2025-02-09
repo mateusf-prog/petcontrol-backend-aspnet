@@ -1,4 +1,4 @@
-﻿namespace PetControlSystem.Domain.Entities
+﻿namespace PetControlSystem.Domain.Entities.Enums
 {
     public enum UserType
     {
