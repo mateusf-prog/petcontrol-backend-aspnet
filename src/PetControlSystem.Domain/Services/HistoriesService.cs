@@ -1,4 +1,5 @@
 ﻿using PetControlSystem.Domain.Interfaces;
+using PetControlSystem.Domain.Notifications;
 
 namespace PetControlSystem.Domain.Services
 {
@@ -7,7 +8,9 @@ namespace PetControlSystem.Domain.Services
         private readonly IOrderService _orderService;
         private readonly IAppointmentService _appointmentService;
 
-        public HistoriesService(IOrderService orderService, IAppointmentService appointmentService)
+        public HistoriesService(IOrderService orderService,
+                                IAppointmentService appointmentService,
+                                INotificator notificator) : base(notificator)
         {
             _orderService = orderService;
             _appointmentService = appointmentService;

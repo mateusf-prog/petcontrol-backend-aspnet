@@ -1,6 +1,7 @@
 ﻿using PetControlSystem.Domain.Entities;
 using PetControlSystem.Domain.Entities.Validations;
 using PetControlSystem.Domain.Interfaces;
+using PetControlSystem.Domain.Notifications;
 
 namespace PetControlSystem.Domain.Services
 {
@@ -8,7 +9,8 @@ namespace PetControlSystem.Domain.Services
     {
         private readonly ICustomerRepository _customerRepository;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        public CustomerService(ICustomerRepository customerRepository,
+                              INotificator notificator) : base(notificator)
         {
             _customerRepository = customerRepository;
         }
