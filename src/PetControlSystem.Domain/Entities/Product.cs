@@ -6,6 +6,8 @@
         public decimal Price { get; private set; }
         public int Stock { get; private set; }
         public string? Description { get; private set; }
-        public List<Order>? Orders { get; private set; }
+
+        /* EF Relations */
+        public List<Order>? Orders { get; private set; } = [];
     }
 }
