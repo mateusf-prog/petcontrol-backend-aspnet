@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetControlSystem.Data", "src\PetControlSystem.Data\PetControlSystem.Data.csproj", "{35BC53B8-8332-4153-8F4F-60FE064F5628}"
+	ProjectSection(ProjectDependencies) = postProject
+		{24B6DF7E-F815-4C73-8946-80D7DE794CBD} = {24B6DF7E-F815-4C73-8946-80D7DE794CBD}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetControlSystem.Domain", "src\PetControlSystem.Domain\PetControlSystem.Domain.csproj", "{24B6DF7E-F815-4C73-8946-80D7DE794CBD}"
 EndProject
