@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using PetControlSystem.Domain.Notification;
+using PetControlSystem.Domain.Notifications;
 
 namespace PetControlSystem.Domain.Services
 {
@@ -21,7 +21,7 @@ namespace PetControlSystem.Domain.Services
 
         public void Notify(string message)
         {
-            _notification.Handle(new Notificator(message));
+            _notification.Handle(new Notification(message));
         }
 
         protected bool ExecuteValidation<V, E>(V validation, E entity) where V : AbstractValidator<E>

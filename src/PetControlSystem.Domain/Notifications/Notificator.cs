@@ -1,4 +1,4 @@
-﻿namespace PetControlSystem.Domain.Notification
+﻿namespace PetControlSystem.Domain.Notifications
 {
     public class Notificator : INotificator
     {
