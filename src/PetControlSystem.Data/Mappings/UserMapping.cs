@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetControlSystem.Domain.Entities;
 
-namespace PetControlSystem.Data.Context.Mappings
+namespace PetControlSystem.Data.Mappings
 {
     public class UserMapping : IEntityTypeConfiguration<User>
     {
