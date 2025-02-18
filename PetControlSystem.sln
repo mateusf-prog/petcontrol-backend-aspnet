@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetControlSystem.Data", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetControlSystem.Domain", "src\PetControlSystem.Domain\PetControlSystem.Domain.csproj", "{24B6DF7E-F815-4C73-8946-80D7DE794CBD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetControlSystem.Api", "src\PetControlSystem.Api\PetControlSystem.Api.csproj", "{CB5B3BD6-68F1-44DF-92E0-A184587B249F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{24B6DF7E-F815-4C73-8946-80D7DE794CBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24B6DF7E-F815-4C73-8946-80D7DE794CBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24B6DF7E-F815-4C73-8946-80D7DE794CBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB5B3BD6-68F1-44DF-92E0-A184587B249F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB5B3BD6-68F1-44DF-92E0-A184587B249F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB5B3BD6-68F1-44DF-92E0-A184587B249F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB5B3BD6-68F1-44DF-92E0-A184587B249F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
