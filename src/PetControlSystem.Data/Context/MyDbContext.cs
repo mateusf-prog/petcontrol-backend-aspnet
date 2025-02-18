@@ -7,6 +7,8 @@ namespace PetControlSystem.Data.Context
     {
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            ChangeTracker.AutoDetectChangesEnabled = false;
         }
 
         public DbSet<Product> Product { get; set; }
