@@ -6,7 +6,7 @@ namespace PetControlSystem.Domain.Interfaces
     public interface IRepository<TEntity> : IDisposable where TEntity : Entity
     {
         Task Add(TEntity obj);
-        Task<TEntity> GetById(Guid id);
+        Task<TEntity?> GetById(Guid id);
         Task<IEnumerable<TEntity>> GetAll();
         Task Update(TEntity obj);
         Task Remove(Guid id);
