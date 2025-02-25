@@ -10,7 +10,7 @@
         /* EF Relations */
         public List<Order>? Orders { get; private set; } = [];
 
-        public Product(string name, decimal price, int stock, string description)
+        public Product(string? name, decimal price, int stock, string? description)
         {
             Name = name;
             Price = price;
