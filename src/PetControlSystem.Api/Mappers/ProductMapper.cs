@@ -5,24 +5,24 @@ namespace PetControlSystem.Api.Mappers
 {
     public static class ProductMapper
     {
-        public static Product RoEntity(this ProductDto productDto)
+        public static Product ToEntity(this ProductDto dto)
         {
             return new Product(
-                productDto.Name, 
-                productDto.Price, 
-                productDto.Stock, 
-                productDto.Description);
+                dto.Name, 
+                dto.Price, 
+                dto.Stock, 
+                dto.Description);
         }
 
-        public static ProductDto ToDto(this Product product)
+        public static ProductDto ToDto(this Product entity)
         {
             return new ProductDto
             {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                Stock = product.Stock,
-                Description = product.Description
+                Id = entity.Id,
+                Name = entity.Name,
+                Price = entity.Price,
+                Stock = entity.Stock,
+                Description = entity.Description
             };
         }
     }

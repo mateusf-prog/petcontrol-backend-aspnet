@@ -19,7 +19,7 @@ namespace PetControlSystem.Api.Mappers
                 dto.Document,
                 documentType,
                 userType,
-                null);
+                dto.AddressDto.ToEntity());
         }
 
         public static UserDto ToDto(this User user)

@@ -17,18 +17,18 @@ namespace PetControlSystem.Api.Mappers
                 dto.ZipCode);
         }
 
-        public static AddressDto ToDto(this Address address)
+        public static AddressDto ToDto(this Address entity)
         {
             return new AddressDto
             {
-                Id = address.Id,
-                Street = address.Street,
-                Number = address.Number,
-                Complement = address.Complement,
-                Neighborhood = address.Neighborhood,
-                City = address.City,
-                State = address.State,
-                ZipCode = address.PostalCode
+                Id = entity.Id,
+                Street = entity.Street,
+                Number = entity.Number,
+                Complement = entity.Complement,
+                Neighborhood = entity.Neighborhood,
+                City = entity.City,
+                State = entity.State,
+                ZipCode = entity.PostalCode
             };
         }
     }
