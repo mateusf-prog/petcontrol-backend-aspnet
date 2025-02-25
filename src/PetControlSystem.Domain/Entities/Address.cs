@@ -15,5 +15,16 @@
         public Customer? Customer { get; private set; }
         public Guid? UserId { get; private set; }
         public User? User { get; private set; }
+
+        public Address(string? street, string? number, string? complement, string? neighborhood, string? city, string? state, string? postalCode)
+        {
+            Street = street;
+            Number = number;
+            Complement = complement;
+            Neighborhood = neighborhood;
+            City = city;
+            State = state;
+            PostalCode = postalCode;
+        }
     }
 }
