@@ -15,5 +15,17 @@ namespace PetControlSystem.Domain.Entities
         /* EF Relations */
         public Guid AddressId { get; private set; }
         public Address? Address { get; private set; }
+
+        public User(string? name, string? email, string? password, string? phone, string? document, DocumentType documentType, UserType type, Address address)
+        {
+            Name = name;
+            Email = email;
+            Password = password;
+            Phone = phone;
+            Document = document;
+            DocumentType = documentType;
+            Type = type;
+            Address = address;
+        }
     }
 }
