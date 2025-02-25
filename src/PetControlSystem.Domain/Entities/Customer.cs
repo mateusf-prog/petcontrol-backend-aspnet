@@ -13,5 +13,14 @@
         public List<Order>? Orders { get; private set; }
         public List<Appointment>? Appointments { get; private set; }
         public List<Pet>? Pets { get; private set; }
+
+        public Customer(string? name, string? email, string? phone, string? document, Address? address)
+        {
+            Name = name;
+            Email = email;
+            Phone = phone;
+            Document = document;
+            Address = address;
+        }
     }
 }

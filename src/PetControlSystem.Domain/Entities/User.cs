@@ -16,7 +16,7 @@ namespace PetControlSystem.Domain.Entities
         public Guid AddressId { get; private set; }
         public Address? Address { get; private set; }
 
-        public User(string? name, string? email, string? password, string? phone, string? document, DocumentType documentType, UserType type, Address address)
+        public User(string? name, string? email, string? password, string? phone, string? document, DocumentType documentType, UserType type, Address? address)
         {
             Name = name;
             Email = email;
