@@ -34,5 +34,8 @@ namespace PetControlSystem.Api.Dto
         [Required(ErrorMessage = "The field {0} is required")]
         [Range(1, 2, ErrorMessage = "The field {0} must be between {1} and {2}")]
         public int Type { get; set; }
+
+        [Required(ErrorMessage = "The field {0} is required")]
+        public AddressDto AddressDto { get; set; }
     }
 }

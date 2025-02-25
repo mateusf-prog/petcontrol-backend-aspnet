@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PetControlSystem.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace PetControlSystem.Api.Dto
 {
@@ -11,7 +12,7 @@ namespace PetControlSystem.Api.Dto
         public string? Name { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
-        public string? Weight { get; set; }
+        public double? Weight { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
         [Range(1, 3, ErrorMessage = "The field {0} must be between {1} and {2}")]
@@ -24,6 +25,7 @@ namespace PetControlSystem.Api.Dto
         [Range(1, 2, ErrorMessage = "The field {0} must be between {1} and {2}")]
         public int Gender { get; set; }
 
-        public Guid CustomerId { get; set; }
+        [Required(ErrorMessage = "The field {0} is required")]
+        public CustomerDto Customer { get; set; }
     }
 }
