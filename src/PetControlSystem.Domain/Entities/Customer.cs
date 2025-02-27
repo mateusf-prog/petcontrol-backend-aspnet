@@ -14,6 +14,8 @@
         public List<Appointment>? Appointments { get; private set; }
         public List<Pet>? Pets { get; private set; }
 
+        public Customer() { }
+
         public Customer(string? name, string? email, string? phone, string? document, Address? address)
         {
             Name = name;

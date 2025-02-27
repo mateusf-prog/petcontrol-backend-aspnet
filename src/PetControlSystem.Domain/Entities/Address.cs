@@ -16,6 +16,8 @@
         public Guid? UserId { get; private set; }
         public User? User { get; private set; }
 
+        public Address() { }
+
         public Address(string? street, string? number, string? complement, string? neighborhood, string? city, string? state, string? postalCode)
         {
             Street = street;

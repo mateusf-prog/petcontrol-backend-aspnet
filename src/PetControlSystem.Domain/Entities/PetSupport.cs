@@ -10,6 +10,8 @@
         /* EF Relations */
         public List<Appointment>? Appointments { get; private set; }
 
+        public PetSupport() { }
+
         public PetSupport(string? name, decimal? smallDogPrice, decimal? mediumDogPrice, decimal? largeDogPrice, List<Appointment>? appointments)
         {
             Name = name;

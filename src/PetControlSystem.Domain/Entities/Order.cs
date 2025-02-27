@@ -7,8 +7,10 @@
 
         /* EF Relations */
         public Guid CustomerId { get; private set; }
-        public Customer Customer { get; private set; }
-        public List<Product> Products { get; private set; } = [];
+        public Customer? Customer { get; private set; }
+        public List<Product>? Products { get; private set; } = [];
+
+        public Order() { }
 
         public Order(Customer customer, List<Product> products)
         {

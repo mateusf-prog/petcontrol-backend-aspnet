@@ -12,7 +12,9 @@ namespace PetControlSystem.Domain.Entities
 
         /* EF Relations */
         public Guid CustomerId { get; private set; }
-        public Customer Customer { get; private set; }
+        public Customer? Customer { get; private set; }
+
+        public Pet() { }
 
         public Pet(string? name, string? description, double? weight, PetType petType, Gender gender, Customer customer)
         {

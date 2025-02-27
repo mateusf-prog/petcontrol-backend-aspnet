@@ -8,7 +8,10 @@
         public string? Description { get; private set; }
 
         /* EF Relations */
-        public List<Order>? Orders { get; private set; } = [];
+        public List<Order>? Orders { get; private set; } = new List<Order>();
+
+        // Public parameterless constructor
+        public Product() { }
 
         public Product(string? name, decimal price, int stock, string? description)
         {
