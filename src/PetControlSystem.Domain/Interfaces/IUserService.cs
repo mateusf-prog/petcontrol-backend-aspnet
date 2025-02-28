@@ -4,12 +4,11 @@ namespace PetControlSystem.Domain.Interfaces
 {
     public interface IUserService : IDisposable
     {
-        Task<User> GetById(Guid id);
-        Task<IEnumerable<User>> GetAll();
-        Task<User> Add(User user);
-        Task<dynamic> Login(User user);
-        Task<User> Update(Guid id, User user);
-        Task<dynamic> Delete(Guid id);
-        Task UpdatePassword(User user, string newPassword);
+        Task GetById(Guid id);
+        Task GetAll();
+        Task Add(User user);
+        Task Login(User user);
+        Task Update(Guid id, User user);
+        Task Delete(Guid id);
     }
 }
