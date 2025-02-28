@@ -18,46 +18,42 @@ namespace PetControlSystem.Api.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
         {
-            var users = await _service.GetAll();
-            return Ok(users);
+            await _service.GetAll();
+            return Ok();
         }
 
         [HttpGet("{id:guid}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> GetById(Guid id)
+        public async Task<ActionResult<UserDto>> GetById(Guid id)
         {
-            var user = await _service.GetById(id);
-            return Ok(user);
+            await _service.GetById(id);
+            return Ok();
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] UserDto input)
+        public async Task<ActionResult<UserDto>> Create([FromBody] UserDto input)
         {
-            var createdUser = await _service.Add(input.ToEntity());
-            return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser.ToDto());
+            await _service.Add(input.ToEntity());
+            return Ok();
         }
 
         [HttpPut("{id:guid}")]
         [Authorize(Roles = "Admin, Common")]
-        public async Task<ActionResult> Update(Guid id, UserDto userDto)
+        public async Task<ActionResult<UserDto>> Update(Guid id, UserDto userDto)
         {
-            var result = await _service.Update(id, userDto.ToEntity());
-
-            return Ok(result.ToDto());
+            await _service.Update(id, userDto.ToEntity());
+            return Ok();
         }
 
         [HttpDelete("{id:guid}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            var user = await _service.Delete(id);
-
-            if (user == null) return NotFound();
-
-            return Ok(user);
+            await _service.Delete(id);
+            return Ok();
         }
     }
 }
