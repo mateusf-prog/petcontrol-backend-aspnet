@@ -1,41 +1,63 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetControlSystem.Api.Dto;
+using PetControlSystem.Api.Mappers;
+using PetControlSystem.Domain.Interfaces;
 
 namespace PetControlSystem.Api.Controllers
 {
     [Route("api/users")]
     public class UsersController : MainController
     {
-        public UsersController() { }
+        private readonly IUserService _service;
+
+        public UsersController(IUserService service)
+        {
+            _service = service;
+        }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> GetAll()
         {
-            throw new NotImplementedException();
+            var users = await _service.GetAll();
+            return Ok(users);
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<UserDto>> GetById(Guid id)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _service.GetById(id);
+            return Ok(user);
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserDto>> Create(UserDto userDto)
+        [AllowAnonymous]
+        public async Task<IActionResult> Create([FromBody] UserDto input)
         {
-            throw new NotImplementedException();
+            var createdUser = await _service.Add(input.ToEntity());
+            return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser.ToDto());
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<UserDto>> Update(Guid id, UserDto userDto)
+        [Authorize(Roles = "Admin, Common")]
+        public async Task<ActionResult> Update(Guid id, UserDto userDto)
         {
-            throw new NotImplementedException();
+            var result = await _service.Update(id, userDto.ToEntity());
+
+            return Ok(result.ToDto());
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<UserDto>> Delete(Guid id)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _service.Delete(id);
+
+            if (user == null) return NotFound();
+
+            return Ok(user);
         }
     }
 }
