@@ -33,7 +33,8 @@ namespace PetControlSystem.Data.Repository
 
         public Task Add(TEntity obj)
         {
-            throw new NotImplementedException();
+            DbSet.Add(obj);
+            return SaveChanges();
         }
 
         public virtual async Task Update(TEntity entity)
