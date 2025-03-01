@@ -9,11 +9,13 @@ namespace PetControlSystem.Api.Mappers
     {
         public static User ToEntity(this UserDto dto)
         {
+            var id = dto.Id == Guid.Empty ? Guid.NewGuid() : dto.Id;
             var documentType = Enum.Parse<DocumentType>(dto.DocumentType.ToString());
             var userType = Enum.Parse<UserType>(dto.Type.ToString());
             var password = PasswordUtils.EncryptPassword(dto.Password!);
 
             return new User(
+                id,
                 dto.Name,
                 dto.Email,
                 password,
@@ -35,7 +37,7 @@ namespace PetControlSystem.Api.Mappers
                 Phone = user.Phone,
                 Document = user.Document,
                 DocumentType = (int)user.DocumentType,
-                Type = (int)user.Type,
+                Type = (int)user.Type
             };
         }
     }
