@@ -17,14 +17,10 @@ namespace PetControlSystem.Domain.Utils
             return builder.ToString();
         }
 
-        private static string DecryptPassword(string password)
-        {
-            return Encoding.UTF8.GetString(SHA256.HashData(Encoding.UTF8.GetBytes(password)));
-        }
-
         public static bool ValidatePassword(string passwordSavedOnDatabase, string passwordDto)
         {
-            return DecryptPassword(passwordSavedOnDatabase) == passwordDto;
+            var enteredHash = EncryptPassword(passwordDto);
+            return enteredHash == passwordSavedOnDatabase;
         }
     }
 }
