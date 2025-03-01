@@ -80,7 +80,6 @@ namespace PetControlSystem.Domain.Services
             await _repository.Update(user);
         }
 
-
         public void Dispose()
         {
             _repository?.Dispose();
