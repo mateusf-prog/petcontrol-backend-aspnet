@@ -5,11 +5,11 @@ using PetControlSystem.Domain.Notifications;
 
 namespace PetControlSystem.Domain.Services
 {
-    public class PetSuppportService : BaseService, IPetSupportService
+    public class PetSupportService : BaseService, IPetSupportService
     {
         private readonly IPetSupportRepository _petSupportRepository;
 
-        public PetSuppportService(IPetSupportRepository petSupportRepository,
+        public PetSupportService(IPetSupportRepository petSupportRepository,
                                   INotificator notificator) : base(notificator)
         {
             _petSupportRepository = petSupportRepository;
