@@ -1,12 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetControlSystem.Api.Dto;
+using PetControlSystem.Domain.Interfaces;
+using PetControlSystem.Domain.Notifications;
 
 namespace PetControlSystem.Api.Controllers
 {
     [Route("api/appointments")]
     public class AppointmentsController : MainController
     {
-        public AppointmentsController() { }
+        private readonly IAppointmentService _service;
+
+        public AppointmentsController(IAppointmentService service, INotificator notificator) : base(notificator)
+        {
+            _service = service;
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAll()

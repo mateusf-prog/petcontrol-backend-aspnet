@@ -1,12 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetControlSystem.Api.Dto;
+using PetControlSystem.Domain.Interfaces;
+using PetControlSystem.Domain.Notifications;
 
 namespace PetControlSystem.Api.Controllers
 {
     [Route("api/customers")]
     public class CustomersController : MainController
     {
-        public CustomersController() { }
+        private readonly ICustomerService _service;
+
+        public CustomersController(ICustomerService service, INotificator notificator) : base(notificator)
+        {
+            _service = service;
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CustomerDto>>> GetAll()
