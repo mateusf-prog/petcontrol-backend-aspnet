@@ -37,7 +37,7 @@ namespace PetControlSystem.Api.Controllers
         public async Task<ActionResult<UserDto>> Create([FromBody] UserDto input)
         {
             await _service.Add(input.ToEntity());
-            return Ok();
+            return CreatedAtAction(nameof(GetById), new { id = input.Id }, input);
         }
 
         [HttpPut("{id:guid}")]
@@ -53,6 +53,14 @@ namespace PetControlSystem.Api.Controllers
         public async Task<ActionResult> Delete(Guid id)
         {
             await _service.Delete(id);
+            return Ok();
+        }
+
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<ActionResult<UserDto>> Login([FromBody] UserLogingDto input)
+        {
+            await _service.Login(input.ToEntity());
             return Ok();
         }
     }
