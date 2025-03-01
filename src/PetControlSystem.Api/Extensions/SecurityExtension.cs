@@ -6,7 +6,7 @@ namespace PetControlSystem.Api.Extensions
 {
     public static class SecurityExtension
     {
-        public static void AddSecurity(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(x =>
             {
@@ -24,6 +24,8 @@ namespace PetControlSystem.Api.Extensions
                     ValidateAudience = false
                 };
             });
+
+            return services;
         }
     }
 }
