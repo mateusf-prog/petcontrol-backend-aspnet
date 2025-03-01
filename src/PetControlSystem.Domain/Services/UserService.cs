@@ -33,31 +33,12 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Delete(Guid id)
         {
-            if (_repository.GetById(id) is null)
+            if (await _repository.GetById(id) is null)
             {
                 Notify("User not found");
                 return;
             }
-
             await _repository.Remove(id);
-        }
-
-        public async Task<IEnumerable<User>> GetAll()
-        {
-            return await _repository.GetAll();
-        }
-
-        public async Task<User> GetById(Guid id)
-        {
-            var result = await _repository.GetById(id);
-
-            if (result is null)
-            {
-                Notify("User not found");
-                return null;
-            }
-
-            return result;
         }
 
         public async Task<dynamic> Login(string email, string password)
@@ -87,23 +68,18 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Update(Guid id, User user)
         {
-            if (id != user.Id)
-            {
-                Notify("The Id is not the same as the User Id");
-                return;
-            }
-            
             if (!ExecuteValidation(new UserValidation(), user))
                 return;
 
-            if (_repository.GetById(id) is null)
+            if (_repository.Get(u => u.Document == user.Document && u.Id != id).Result.Any())
             {
-                Notify("There is no User with this ID");
+                Notify("There is already User with this Document");
                 return;
             }
 
             await _repository.Update(user);
         }
+
 
         public void Dispose()
         {
