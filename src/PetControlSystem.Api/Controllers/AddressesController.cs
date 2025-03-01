@@ -4,9 +4,9 @@ using PetControlSystem.Api.Dto;
 namespace PetControlSystem.Api.Controllers
 {
     [Route("api/addresses")]
-    public class Addresses : MainController
+    public class AddressesController : MainController
     {
-        public Addresses() { }
+        public AddressesController() { }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AddressDto>>> GetAll()
