@@ -1,6 +1,7 @@
 ﻿using PetControlSystem.Api.Dto;
 using PetControlSystem.Domain.Entities;
 using PetControlSystem.Domain.Entities.Enums;
+using PetControlSystem.Domain.Utils;
 
 namespace PetControlSystem.Api.Mappers
 {
@@ -10,11 +11,12 @@ namespace PetControlSystem.Api.Mappers
         {
             var documentType = Enum.Parse<DocumentType>(dto.DocumentType.ToString());
             var userType = Enum.Parse<UserType>(dto.Type.ToString());
+            var password = PasswordUtils.EncryptPassword(dto.Password!);
 
             return new User(
                 dto.Name,
                 dto.Email,
-                dto.Password,
+                password,
                 dto.Phone,
                 dto.Document,
                 documentType,
