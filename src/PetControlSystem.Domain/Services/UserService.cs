@@ -31,41 +31,6 @@ namespace PetControlSystem.Domain.Services
             await _repository.Add(user);
         }
 
-        public async Task Delete(Guid id)
-        {
-            if (await _repository.GetById(id) is null)
-            {
-                Notify("User not found");
-                return;
-            }
-            await _repository.Remove(id);
-        }
-
-        public async Task<dynamic> Login(string email, string password)
-        {
-            var result = await _repository.Get(u => u.Email == email);
-
-            if (!result.Any())
-            {
-                Notify("User not found");
-                return null;
-            }
-
-            if (PasswordUtils.ValidatePassword(result.FirstOrDefault()!.Password!, password) is false)
-            {
-                Notify("Invalid Password");
-                return null;
-            }
-
-            var token = _tokenService.GenerateToken(result.FirstOrDefault()!);
-
-            return new
-            {
-                user = result.FirstOrDefault(),
-                token
-            };
-        }
-
         public async Task Update(Guid id, User user)
         {
             if (!ExecuteValidation(new UserValidation(), user))
@@ -78,6 +43,16 @@ namespace PetControlSystem.Domain.Services
             }
 
             await _repository.Update(user);
+        }
+
+        public async Task Delete(Guid id)
+        {
+            if (await _repository.GetById(id) is null)
+            {
+                Notify("User not found");
+                return;
+            }
+            await _repository.Remove(id);
         }
 
         public void Dispose()
