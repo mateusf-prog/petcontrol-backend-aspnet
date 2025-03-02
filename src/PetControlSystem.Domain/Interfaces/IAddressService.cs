@@ -5,7 +5,7 @@ namespace PetControlSystem.Domain.Interfaces
     public interface IAddressService : IDisposable
     {
         Task Add(Address address);
-        Task Update(Address address);
-        Task Remove(Guid id);
+        Task Update(Guid id, Address address);
+        Task Delete(Guid id);
     }
 }
