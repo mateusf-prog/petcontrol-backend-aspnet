@@ -12,67 +12,50 @@ namespace PetControlSystem.Api.Controllers
     public class UsersController : MainController
     {
         private readonly IUserService _service;
+        private readonly IUserRepository _repository;
 
-        public UsersController(IUserService service, INotificator notificator) : base(notificator)
+        public UsersController(IUserService service, IUserRepository repository, INotificator notificator) : base(notificator)
         {
             _service = service;
+            _repository = repository;
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
         {
-            var result = await _service.GetAll();
-            return result.Select(x => x.ToDto()).ToList();
+            var result = await _repository.GetAll();
+            return result.Select(u => u.ToDto()).ToList();
         }
 
         [HttpGet("{id:guid}")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserDto>> GetById(Guid id)
         {
-            var result = await _service.GetById(id);
-
-            if (result == null) return NotFound();
-
+            var result = await _repository.GetById(id);
+            if (result is null) return NotFound();
             return result.ToDto();
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<ActionResult<UserDto>> Add([FromBody] UserDto input)
         {
-            if (ModelState.IsValid) return CustomResponse(ModelState);
-
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
             await _service.Register(input.ToEntity());
-
             return CustomResponse(HttpStatusCode.Created, input);
         }
 
         [HttpPut("{id:guid}")]
-        [Authorize(Roles = "Admin, Common")]
         public async Task<ActionResult<UserDto>> Update(Guid id, UserDto input)
         {
-            if (ModelState.IsValid) return CustomResponse(ModelState);
-
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
             await _service.Update(id, input.ToEntity());
-
             return CustomResponse(HttpStatusCode.NoContent, input);
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(Guid id)
         {
             await _service.Delete(id);
-            return Ok();
-        }
-
-        [HttpPost("login")]
-        [AllowAnonymous]
-        public async Task<ActionResult<UserDto>> Login([FromBody] LoginDto input)
-        {
-            var result = await _service.Login(input.Email, input.Password);
-            return CustomResponse(result);
+            return CustomResponse(HttpStatusCode.NoContent);
         }
     }
 }
