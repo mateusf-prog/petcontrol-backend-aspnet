@@ -7,86 +7,60 @@ namespace PetControlSystem.Domain.Services
 {
     public class ProductService : BaseService, IProductService
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductRepository _repository;
 
-        public ProductService(IProductRepository productRepository, 
+        public ProductService(IProductRepository repository, 
                               INotificator notificator) : base(notificator)
         {
-            _productRepository = productRepository;
+            _repository = repository;
         }
 
         public async Task Add(Product product)
         {
             if (!ExecuteValidation(new ProductValidation(), product)) return;
 
-            if (_productRepository.GetById(product.Id) != null)
+            if (_repository.GetById(product.Id) != null)
             {
                 Notify("There is already a product with this ID");
                 return;
             }
 
-            if (_productRepository.Get(p => p.Name == product.Name).Result.Any())
+            if (_repository.Get(p => p.Name == product.Name).Result.Any())
             {
                 Notify("There is already a product with this name");
                 return;
             }
 
-            await _productRepository.Add(product);
+            await _repository.Add(product);
+        }
+
+        public async Task Update(Guid id, Product product)
+        {
+            if (!ExecuteValidation(new ProductValidation(), product)) return;
+
+            if (_repository.GetById(product.Id) is null)
+            {
+                Notify("Product not found");
+                return;
+            }
+
+            await _repository.Update(product);
         }
 
         public async Task Delete(Guid id)
         {
-            if (_productRepository.GetById(id) is null)
+            if (_repository.GetById(id) is null)
             {
-                Notify("There is no product with this ID");
+                Notify("Product not found");
                 return;
             }
 
-            await _productRepository.Remove(id);
-        }
-
-        public async Task<IEnumerable<Product>?> GetAll()
-        {
-            var result = await _productRepository.GetAll();
-
-            if(result is null)
-            {
-                Notify("There are no products");
-                return null;
-            }
-
-            return result;
-        }
-
-        public async Task<Product?> GetById(Guid id)
-        {
-            var result = await _productRepository.GetById(id);
-
-            if (result is null)
-            {
-                Notify("There are no products");
-                return null;
-            }
-
-            return result;
-        }
-
-        public async Task Update(Product product)
-        {
-            if (!ExecuteValidation(new ProductValidation(), product)) return;
-
-            if (_productRepository.GetById(product.Id) is null)
-            {
-                Notify("There is no product with this ID");
-                return;
-            }
-
-            await _productRepository.Update(product);
+            await _repository.Remove(id);
         }
 
         public void Dispose()
         {
-            _productRepository?.Dispose();
+            _repository?.Dispose();
             GC.SuppressFinalize(this);
         }
     }
