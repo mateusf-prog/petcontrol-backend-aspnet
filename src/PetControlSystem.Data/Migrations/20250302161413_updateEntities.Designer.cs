@@ -12,8 +12,8 @@ using PetControlSystem.Data.Context;
 namespace PetControlSystem.Data.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20250218010009_Initial")]
-    partial class Initial
+    [Migration("20250302161413_updateEntities")]
+    partial class updateEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,50 +55,6 @@ namespace PetControlSystem.Data.Migrations
                     b.ToTable("OrderProduct");
                 });
 
-            modelBuilder.Entity("PetControlSystem.Domain.Entities.Address", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("Complement")
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<Guid?>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Neighborhood")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("varchar(8)");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Address");
-                });
-
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Appointment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -128,9 +84,6 @@ namespace PetControlSystem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AddressId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Document")
                         .IsRequired()
                         .HasColumnType("varchar(14)");
@@ -148,9 +101,6 @@ namespace PetControlSystem.Data.Migrations
                         .HasColumnType("varchar(20)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AddressId")
-                        .IsUnique();
 
                     b.ToTable("Customer");
                 });
@@ -270,9 +220,6 @@ namespace PetControlSystem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AddressId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Document")
                         .IsRequired()
                         .HasColumnType("varchar(14)");
@@ -290,7 +237,7 @@ namespace PetControlSystem.Data.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Password")
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -300,9 +247,6 @@ namespace PetControlSystem.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AddressId")
-                        .IsUnique();
 
                     b.ToTable("User");
                 });
@@ -345,10 +289,45 @@ namespace PetControlSystem.Data.Migrations
 
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Customer", b =>
                 {
-                    b.HasOne("PetControlSystem.Domain.Entities.Address", "Address")
-                        .WithOne("Customer")
-                        .HasForeignKey("PetControlSystem.Domain.Entities.Customer", "AddressId")
-                        .IsRequired();
+                    b.OwnsOne("PetControlSystem.Domain.Entities.Address", "Address", b1 =>
+                        {
+                            b1.Property<Guid>("CustomerId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnType("varchar(50)");
+
+                            b1.Property<string>("Complement")
+                                .HasColumnType("varchar(50)");
+
+                            b1.Property<string>("Neighborhood")
+                                .IsRequired()
+                                .HasColumnType("varchar(50)");
+
+                            b1.Property<string>("Number")
+                                .IsRequired()
+                                .HasColumnType("varchar(10)");
+
+                            b1.Property<string>("PostalCode")
+                                .IsRequired()
+                                .HasColumnType("varchar(8)");
+
+                            b1.Property<string>("State")
+                                .IsRequired()
+                                .HasColumnType("varchar(2)");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasColumnType("varchar(100)");
+
+                            b1.HasKey("CustomerId");
+
+                            b1.ToTable("Customer");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CustomerId");
+                        });
 
                     b.Navigation("Address");
                 });
@@ -375,19 +354,47 @@ namespace PetControlSystem.Data.Migrations
 
             modelBuilder.Entity("PetControlSystem.Domain.Entities.User", b =>
                 {
-                    b.HasOne("PetControlSystem.Domain.Entities.Address", "Address")
-                        .WithOne("User")
-                        .HasForeignKey("PetControlSystem.Domain.Entities.User", "AddressId")
-                        .IsRequired();
+                    b.OwnsOne("PetControlSystem.Domain.Entities.Address", "Address", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnType("varchar(50)");
+
+                            b1.Property<string>("Complement")
+                                .HasColumnType("varchar(50)");
+
+                            b1.Property<string>("Neighborhood")
+                                .IsRequired()
+                                .HasColumnType("varchar(50)");
+
+                            b1.Property<string>("Number")
+                                .IsRequired()
+                                .HasColumnType("varchar(10)");
+
+                            b1.Property<string>("PostalCode")
+                                .IsRequired()
+                                .HasColumnType("varchar(8)");
+
+                            b1.Property<string>("State")
+                                .IsRequired()
+                                .HasColumnType("varchar(2)");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasColumnType("varchar(100)");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("User");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
 
                     b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("PetControlSystem.Domain.Entities.Address", b =>
-                {
-                    b.Navigation("Customer");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Customer", b =>

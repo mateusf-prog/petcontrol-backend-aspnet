@@ -29,9 +29,35 @@ namespace PetControlSystem.Data.Mappings
                 .IsRequired()
                 .HasColumnType("varchar(14)");
 
-            builder.HasOne(u => u.Address)
-                .WithOne(a => a.User)
-                .HasForeignKey<User>(u => u.AddressId);
+            builder.OwnsOne(c => c.Address, a =>
+            {
+                a.Property(ad => ad.Street)
+                    .IsRequired()
+                    .HasColumnType("varchar(100)");
+
+                a.Property(ad => ad.Number)
+                    .IsRequired()
+                    .HasColumnType("varchar(10)");
+
+                a.Property(ad => ad.Complement)
+                    .HasColumnType("varchar(50)");
+
+                a.Property(ad => ad.Neighborhood)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)");
+
+                a.Property(ad => ad.City)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)");
+
+                a.Property(ad => ad.State)
+                    .IsRequired()
+                    .HasColumnType("varchar(2)");
+
+                a.Property(ad => ad.PostalCode)
+                    .IsRequired()
+                    .HasColumnType("varchar(8)");
+            });
         }
     }
 }
