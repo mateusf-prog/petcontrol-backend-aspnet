@@ -5,7 +5,7 @@ namespace PetControlSystem.Api.Mappers
 {
     public static class AddressMapper
     {
-        public static Address ToEntity(this AddressDto dto)
+        public static Address ToValueObject(this AddressDto dto)
         {
             return new Address(
                 dto.Street,
@@ -21,7 +21,6 @@ namespace PetControlSystem.Api.Mappers
         {
             return new AddressDto
             {
-                Id = entity.Id,
                 Street = entity.Street,
                 Number = entity.Number,
                 Complement = entity.Complement,
