@@ -7,76 +7,56 @@ namespace PetControlSystem.Domain.Services
 {
     public class PetSupportService : BaseService, IPetSupportService
     {
-        private readonly IPetSupportRepository _petSupportRepository;
+        private readonly IPetSupportRepository _repository;
 
-        public PetSupportService(IPetSupportRepository petSupportRepository,
+        public PetSupportService(IPetSupportRepository repository,
                                   INotificator notificator) : base(notificator)
         {
-            _petSupportRepository = petSupportRepository;
+            _repository = repository;
         }
 
-        public async Task Add(PetSupport petSupport)
+        public async Task Add(PetSupport input)
         {
-            if(!ExecuteValidation(new PetSupportValidation(), petSupport)) return;
+            if(!ExecuteValidation(new PetSupportValidation(), input)) return;
 
-            await _petSupportRepository.Add(petSupport);
+            if (_repository.GetById(input.Id) != null)
+            {
+                Notify("There is already a pet with this ID");
+                return;
+            }
+
+            await _repository.Add(input);
+        }
+
+        public async Task Update(Guid id, PetSupport input)
+        {
+            if (!ExecuteValidation(new PetSupportValidation(), input)) return;
+
+            var result = await _repository.GetById(input.Id);
+
+            if (result is null)
+            {
+                Notify("PetSupport not found");
+                return;
+            }
+
+            await _repository.Update(input);
         }
 
         public async Task Delete(Guid id)
         {
-            if (_petSupportRepository.GetById(id) is null) 
+            if (_repository.GetById(id) is null)
             {
-                Notify("There is no pet support with this ID");
+                Notify("PetSupport not found");
                 return;
             }
 
-            await _petSupportRepository.Remove(id);
-        }
-
-        public async Task<IEnumerable<PetSupport>?> GetAll()
-        {
-            var result = await _petSupportRepository.GetAll();
-
-            if (result is null)
-            {
-                Notify("There are no pet supports");
-                return null;
-            }
-
-            return result;
-        }
-
-        public async Task<PetSupport?> GetById(Guid id)
-        {
-            var result = await _petSupportRepository.GetById(id);
-
-            if (result is null)
-            {
-                Notify("There is no pet support with this ID");
-                return null;
-            }
-
-            return result;
-        }
-
-        public async Task Update(PetSupport petSupport)
-        {
-            if (!ExecuteValidation(new PetSupportValidation(), petSupport)) return;
-
-            var result = await _petSupportRepository.GetById(petSupport.Id);
-
-            if (result is null)
-            {
-                Notify("There is no pet support with this ID");
-                return;
-            }
-
-            await _petSupportRepository.Update(petSupport);
+            await _repository.Remove(id);
         }
 
         public void Dispose()
         {
-            _petSupportRepository?.Dispose();
+            _repository?.Dispose();
             GC.SuppressFinalize(this);
         }
     }

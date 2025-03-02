@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetControlSystem.Api.Dto;
+using PetControlSystem.Api.Mappers;
 using PetControlSystem.Domain.Interfaces;
 using PetControlSystem.Domain.Notifications;
+using System.Net;
 
 namespace PetControlSystem.Api.Controllers
 {
@@ -9,40 +11,50 @@ namespace PetControlSystem.Api.Controllers
     public class PetSupportsController : MainController
     {
         private readonly IPetSupportService _service;
+        private readonly IPetSupportRepository _repository;
 
-        public PetSupportsController(IPetSupportService service, INotificator notificator) : base(notificator)
+        public PetSupportsController(IPetSupportService service, IPetSupportRepository repository, INotificator notificator) : base(notificator)
         {
             _service = service;
+            _repository = repository;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PetSupportDto>>> GetAll()
         {
-            throw new NotImplementedException();
+            var result = await _repository.GetAll();
+            return result.Select(o => o.ToDto()).ToList();
         }
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<PetSupportDto>> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await _repository.GetById(id);
+            if (result is null) return NotFound();
+            return result.ToDto();
         }
 
         [HttpPost]
-        public async Task<ActionResult<PetSupportDto>> Create(PetSupportDto petSupportDto)
+        public async Task<ActionResult> Create(PetSupportDto input)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+            await _service.Add(input.ToEntity());
+            return CustomResponse(HttpStatusCode.Created, input);
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<PetSupportDto>> Update(Guid id, PetSupportDto petSupportDto)
+        public async Task<ActionResult> Update(Guid id, PetSupportDto input)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+            await _service.Add(input.ToEntity());
+            return CustomResponse(HttpStatusCode.NoContent, input);
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<PetSupportDto>> Delete(Guid id)
+        public async Task<ActionResult> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            await _service.Delete(id);
+            return CustomResponse(HttpStatusCode.NoContent);
         }
     }
 }
