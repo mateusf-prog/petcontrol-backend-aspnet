@@ -40,15 +40,15 @@ namespace PetControlSystem.Domain.Services
             await _repository.Update(pet);
         }
 
-        public async Task Delete(Pet pet)
+        public async Task Delete(Guid id)
         {
-            if (await _repository.GetById(pet.Id) == null)
+            if (await _repository.GetById(id) == null)
             {
                 Notify("Pet not found");
                 return;
             }
 
-            await _repository.Remove(pet.Id);
+            await _repository.Remove(id);
         }
 
         public void Dispose()
