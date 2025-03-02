@@ -7,86 +7,60 @@ namespace PetControlSystem.Domain.Services
 {
     public class CustomerService : BaseService, ICustomerService
     {
-        private readonly ICustomerRepository _customerRepository;
+        private readonly ICustomerRepository _repository;
 
         public CustomerService(ICustomerRepository customerRepository,
                               INotificator notificator) : base(notificator)
         {
-            _customerRepository = customerRepository;
+            _repository = customerRepository;
         }
 
         public async Task Add(Customer customer)
         {
             if (ExecuteValidation(new CustomerValidation(), customer)) return;
 
-            if (_customerRepository.Get(c => c.Document == customer.Document).Result.Any())
+            if (_repository.Get(c => c.Document == customer.Document).Result.Any())
             {
                 Notify("There is already a customer with this document");
                 return;
             }
 
-            if (_customerRepository.Get(c => c.Document == customer.Email).Result.Any())
+            if (_repository.Get(c => c.Document == customer.Email).Result.Any())
             {
                 Notify("There is already a customer with this email");
                 return;
             }
 
-            await _customerRepository.Add(customer);
+            await _repository.Add(customer);
+        }
+
+        public async Task Update(Guid id, Customer customer)
+        {
+            if (ExecuteValidation(new CustomerValidation(), customer)) return;
+            
+            if (_repository.GetById(customer.Id) is null)
+            {
+                Notify("Customer not found");
+                return;
+            }
+
+            await _repository.Update(customer);
         }
 
         public async Task Delete(Guid id)
         {
-            if (_customerRepository.GetById(id) is null)
+            if (_repository.GetById(id) is null)
             {
-                Notify("There is no customer with this ID");
+                Notify("Customer not found");
                 return;
             }
 
-            await _customerRepository.Remove(id);
-        }
-
-        public async Task Update(Customer customer)
-        {
-            if (ExecuteValidation(new CustomerValidation(), customer)) return;
-            
-            if (_customerRepository.GetById(customer.Id) is null)
-            {
-                Notify("There is no customer with this ID");
-                return;
-            }
-
-            await _customerRepository.Update(customer);
-        }
-
-        public async Task<Customer?> GetById(Guid id)
-        {
-            var result = await _customerRepository.GetById(id);
-
-            if (result is null)
-            {
-                Notify("There is no customer with this ID");
-                return null;
-            }
-;
-            return result;
-        }
-
-        public async Task<IEnumerable<Customer>?> GetAll()
-        {
-            var result = await _customerRepository.GetAll();
-
-            if (result is null)
-            {
-                Notify("There are no customers");
-                return null;
-            }
-
-            return result;
+            await _repository.Remove(id);
         }
 
         public void Dispose()
         {
-            _customerRepository?.Dispose();
+            _repository?.Dispose();
             GC.SuppressFinalize(this);
         }
     }
