@@ -36,7 +36,7 @@ namespace PetControlSystem.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserDto>> Add([FromBody] UserDto input)
+        public async Task<ActionResult> Add([FromBody] UserDto input)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
             await _service.Register(input.ToEntity());
@@ -44,7 +44,7 @@ namespace PetControlSystem.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<UserDto>> Update(Guid id, UserDto input)
+        public async Task<ActionResult> Update(Guid id, UserDto input)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
             await _service.Update(id, input.ToEntity());

@@ -35,7 +35,7 @@ namespace PetControlSystem.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CustomerDto>> Create(CustomerDto input)
+        public async Task<ActionResult> Create(CustomerDto input)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
             await _service.Add(input.ToEntity());
@@ -43,7 +43,7 @@ namespace PetControlSystem.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<CustomerDto>> Update(Guid id, CustomerDto input)
+        public async Task<ActionResult> Update(Guid id, CustomerDto input)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
             await _service.Update(id, input.ToEntity());
@@ -51,7 +51,7 @@ namespace PetControlSystem.Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<CustomerDto>> Delete(Guid id)
+        public async Task<ActionResult> Delete(Guid id)
         {
             await _service.Delete(id);
             return CustomResponse(HttpStatusCode.NoContent);
