@@ -7,61 +7,41 @@ namespace PetControlSystem.Domain.Services
 {
     public class OrderService : BaseService, IOrderService
     {
-        private readonly IOrderRepository _orderRepository;
+        private readonly IOrderRepository _repository;
 
-        public OrderService(IOrderRepository orderRepository,
+        public OrderService(IOrderRepository repository,
                             INotificator notificator) : base(notificator)
         {
-            _orderRepository = orderRepository;
+            _repository = repository;
         }
 
         public async Task Add(Order order)
         {
             if (!ExecuteValidation(new OrderValidation(), order)) return;
 
-            if (_orderRepository.GetById(order.Id) != null) 
+            if (_repository.GetById(order.Id) != null) 
             {
                 Notify("There is already an order with this ID");
                 return;
             }
 
-            await _orderRepository.Add(order);
+            await _repository.Add(order);
         }
 
         public async Task Delete(Guid id)
         {
-            await _orderRepository.Remove(id);
-        }
-
-        public async Task<Order?> GetById(Guid id)
-        {
-            var result = await _orderRepository.GetById(id);
-
-            if (result is null)
+            if (await _repository.GetById(id) is null)
             {
-                Notify("There is no order with this ID");
-                return null;
+                Notify("Order not found");
+                return;
             }
 
-            return result;
-        }
-
-        public async Task<IEnumerable<Order>?> GetAll()
-        {
-            var result = await _orderRepository.GetAll();
-
-            if (result is null)
-            {
-                Notify("There are no orders");
-                return null;
-            }
-
-            return result;
+            await _repository.Remove(id);
         }
 
         public void Dispose()
         {
-            _orderRepository?.Dispose();
+            _repository?.Dispose();
             GC.SuppressFinalize(this);
         }
     }

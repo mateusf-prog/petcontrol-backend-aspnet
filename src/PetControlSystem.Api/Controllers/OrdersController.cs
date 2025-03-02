@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetControlSystem.Api.Dto;
+using PetControlSystem.Api.Mappers;
 using PetControlSystem.Domain.Interfaces;
 using PetControlSystem.Domain.Notifications;
+using System.Net;
 
 namespace PetControlSystem.Api.Controllers
 {
@@ -9,40 +11,42 @@ namespace PetControlSystem.Api.Controllers
     public class OrdersController : MainController
     {
         private readonly IOrderService _service;
+        private readonly IOrderRepository _repository;
 
-        public OrdersController(IOrderService service, INotificator notificator) : base(notificator)
+        public OrdersController(IOrderService service,IOrderRepository repository, INotificator notificator) : base(notificator)
         {
             _service = service;
+            _repository = repository;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetAll()
         {
-            throw new NotImplementedException();
+            var result = await _repository.GetAll();
+            return result.Select(o => o.ToDto()).ToList();
         }
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<OrderDto>> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await _repository.GetById(id);
+            if (result is null) return NotFound();
+            return result.ToDto();
         }
 
         [HttpPost]
-        public async Task<ActionResult<OrderDto>> Create(OrderDto orderDto)
+        public async Task<ActionResult> Create(OrderDto input)
         {
-            throw new NotImplementedException();
-        }
-
-        [HttpPut("{id:guid}")]
-        public async Task<ActionResult<OrderDto>> Update(Guid id, OrderDto orderDto)
-        {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+            await _service.Add(input.ToEntity());
+            return CustomResponse(HttpStatusCode.Created, input);
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<OrderDto>> Delete(Guid id)
+        public async Task<ActionResult> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            await _service.Delete(id);
+            return CustomResponse(HttpStatusCode.NoContent);
         }
     }
 }

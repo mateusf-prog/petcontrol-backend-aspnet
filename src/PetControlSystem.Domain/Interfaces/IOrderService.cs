@@ -6,7 +6,5 @@ namespace PetControlSystem.Domain.Interfaces
     {
         Task Add(Order order);
         Task Delete(Guid id);
-        Task<Order?> GetById(Guid id);
-        Task<IEnumerable<Order>?> GetAll();
     }
 }
