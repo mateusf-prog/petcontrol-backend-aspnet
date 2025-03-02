@@ -12,7 +12,6 @@ namespace PetControlSystem.Api.Extensions
         {
             // data
             services.AddScoped<MyDbContext>();
-            services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IPetRepository, PetRepository>();
@@ -22,7 +21,6 @@ namespace PetControlSystem.Api.Extensions
             services.AddScoped<IPetSupportRepository, PetSupportRepository>();
 
             // domain
-            services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IPetService, PetService>();
