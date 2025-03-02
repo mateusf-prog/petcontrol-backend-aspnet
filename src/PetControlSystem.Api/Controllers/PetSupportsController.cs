@@ -46,8 +46,8 @@ namespace PetControlSystem.Api.Controllers
         public async Task<ActionResult> Update(Guid id, PetSupportDto input)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
-            await _service.Add(input.ToEntity());
-            return CustomResponse(HttpStatusCode.NoContent, input);
+            await _service.Update(id, input.ToEntity());
+            return CustomResponse(HttpStatusCode.NoContent);
         }
 
         [HttpDelete("{id:guid}")]
