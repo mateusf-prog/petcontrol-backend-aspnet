@@ -16,9 +16,6 @@ namespace PetControlSystem.Domain.Entities.Validations
 
             RuleFor(p => p.Customer)
                 .NotEmpty().WithMessage("The {PropertyName} field is required");
-
-            RuleFor(p => p.Gender)
-                .NotEmpty().WithMessage("The {PropertyName} field is required");
         }
     }
 }

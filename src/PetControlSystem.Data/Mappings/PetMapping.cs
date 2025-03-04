@@ -23,18 +23,6 @@ namespace PetControlSystem.Data.Mappings
                 .IsRequired();
 
             builder
-                .Property(p => p.Type)
-                .IsRequired()
-                .HasConversion<string>()
-                .HasColumnType("varchar(100)");
-
-            builder
-                .Property(p => p.Gender)
-                .IsRequired()
-                .HasConversion<string>()
-                .HasColumnType("varchar(100)");
-
-            builder
                 .HasOne(p => p.Customer)
                 .WithMany(c => c.Pets)
                 .HasForeignKey(p => p.CustomerId);

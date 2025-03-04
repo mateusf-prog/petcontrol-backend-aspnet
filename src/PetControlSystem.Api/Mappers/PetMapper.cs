@@ -8,16 +8,11 @@ namespace PetControlSystem.Api.Mappers
     {
         public static Pet ToEntity(this PetDto dto)
         {
-            var petType = Enum.Parse<PetType>(dto.Type.ToString());
-            var gender = Enum.Parse<Gender>(dto.Gender.ToString());
-
             return new Pet(
                 dto.Name,
                 dto.Description,
                 dto.Weight,
-                petType,
-                gender,
-                dto.Customer.ToEntity());
+                dto.CustomerId);
         }
         public static PetDto ToDto(this Pet entity)
         {
@@ -26,9 +21,7 @@ namespace PetControlSystem.Api.Mappers
                 Id = entity.Id,
                 Name = entity.Name,
                 Weight = entity.Weight,
-                Type = (int)entity.Type,
-                Gender = (int)entity.Gender,
-                Customer = entity.Customer.ToDto()
+                CustomerId = entity.Customer!.Id
             };
         }
     }
