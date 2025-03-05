@@ -12,8 +12,9 @@ namespace PetControlSystem.Api.Mappers
                 dto.Email,
                 dto.Phone,
                 dto.Document,
-                null);
+                dto.AddressDto?.ToValueObject());
         }
+
         public static CustomerDto ToDto(this Customer entity)
         {
             return new CustomerDto
@@ -22,6 +23,8 @@ namespace PetControlSystem.Api.Mappers
                 Name = entity.Name,
                 Email = entity.Email,
                 Phone = entity.Phone,
+                Document = entity.Document,
+                AddressDto = entity.Address?.ToDto()
             };
         }
     }

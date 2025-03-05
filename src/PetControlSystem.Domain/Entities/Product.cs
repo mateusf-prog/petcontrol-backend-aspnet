@@ -8,12 +8,20 @@
         public string? Description { get; private set; }
 
         /* EF Relations */
-        public List<Order>? Orders { get; private set; } = new List<Order>();
+        public List<Order>? Orders { get; private set; } = [];
 
         // Public parameterless constructor
         public Product() { }
 
         public Product(string? name, decimal price, int stock, string? description)
+        {
+            Name = name;
+            Price = price;
+            Stock = stock;
+            Description = description;
+        }
+
+        public void Update(string? name, decimal price, int stock, string? description)
         {
             Name = name;
             Price = price;

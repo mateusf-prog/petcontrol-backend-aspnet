@@ -4,8 +4,6 @@ namespace PetControlSystem.Api.Dto
 {
     public class AddressDto
     {
-        public Guid Id { get; set; }
-
         [Required(ErrorMessage = "The field {0} is required")]
         [StringLength(100, ErrorMessage = "The field {0} must be between {2} and {1} characters", MinimumLength = 2)]
         public string? Street { get; set; }
@@ -33,8 +31,5 @@ namespace PetControlSystem.Api.Dto
         [Required(ErrorMessage = "The field {0} is required")]
         [StringLength(8, ErrorMessage = "The field {0} must be between {2} and {1} characters", MinimumLength = 8)]
         public string? ZipCode { get; set; }
-
-        public string? CustomerName { get; set; }
-        public string? UserName { get; set; }
     }
 }

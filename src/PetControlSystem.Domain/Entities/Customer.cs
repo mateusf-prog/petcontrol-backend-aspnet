@@ -8,7 +8,6 @@
         public string? Document { get; private set; }
 
         /* EF Relations */
-        public Guid AddressId { get; private set; }
         public Address? Address { get; private set; }
         public List<Order>? Orders { get; private set; }
         public List<Appointment>? Appointments { get; private set; }
@@ -17,6 +16,15 @@
         public Customer() { }
 
         public Customer(string? name, string? email, string? phone, string? document, Address? address)
+        {
+            Name = name;
+            Email = email;
+            Phone = phone;
+            Document = document;
+            Address = address;
+        }
+
+        public void Update(string name, string email, string phone, string document, Address? address)
         {
             Name = name;
             Email = email;

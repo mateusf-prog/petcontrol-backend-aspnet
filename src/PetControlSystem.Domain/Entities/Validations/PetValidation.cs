@@ -14,10 +14,7 @@ namespace PetControlSystem.Domain.Entities.Validations
                 .NotEmpty().WithMessage("The {PropertyName} field is required")
                 .GreaterThan(0).WithMessage("The {PropertyName} field must be greater than {min}");
 
-            RuleFor(p => p.Customer)
-                .NotEmpty().WithMessage("The {PropertyName} field is required");
-
-            RuleFor(p => p.Gender)
+            RuleFor(p => p.CustomerId)
                 .NotEmpty().WithMessage("The {PropertyName} field is required");
         }
     }

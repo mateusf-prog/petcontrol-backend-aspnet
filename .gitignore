@@ -8,6 +8,7 @@ dist/
 build/
 obj/
 debug/
+Migrations/
 
 .DS_Store
 Thumbs.db

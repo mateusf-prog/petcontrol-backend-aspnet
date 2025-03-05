@@ -15,17 +15,17 @@ namespace PetControlSystem.Domain.Services
             _repository = repository;
         }
 
-        public async Task Add(Order order)
+        public async Task Add(Order input)
         {
-            if (!ExecuteValidation(new OrderValidation(), order)) return;
+            if (!ExecuteValidation(new OrderValidation(), input)) return;
 
-            if (_repository.GetById(order.Id) != null) 
+            if (await _repository.GetById(input.Id) != null) 
             {
                 Notify("There is already an order with this ID");
                 return;
             }
 
-            await _repository.Add(order);
+            await _repository.Add(input);
         }
 
         public async Task Delete(Guid id)

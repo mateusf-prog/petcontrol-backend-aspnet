@@ -39,7 +39,7 @@ namespace PetControlSystem.Api.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
             await _service.Add(input.ToEntity());
-            return CustomResponse(HttpStatusCode.Created, input);
+            return CustomResponse(HttpStatusCode.Created);
         }
 
         [HttpPut("{id:guid}")]
@@ -47,7 +47,7 @@ namespace PetControlSystem.Api.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
             await _service.Update(id, input.ToEntity());
-            return CustomResponse(HttpStatusCode.NoContent, input);
+            return CustomResponse(HttpStatusCode.NoContent);
         }
 
         [HttpDelete("{id:guid}")]

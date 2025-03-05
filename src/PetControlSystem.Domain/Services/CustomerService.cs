@@ -17,7 +17,7 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Add(Customer customer)
         {
-            if (ExecuteValidation(new CustomerValidation(), customer)) return;
+            if (!ExecuteValidation(new CustomerValidation(), customer)) return;
 
             if (_repository.Get(c => c.Document == customer.Document).Result.Any())
             {
@@ -25,7 +25,7 @@ namespace PetControlSystem.Domain.Services
                 return;
             }
 
-            if (_repository.Get(c => c.Document == customer.Email).Result.Any())
+            if (_repository.Get(c => c.Email == customer.Email).Result.Any())
             {
                 Notify("There is already a customer with this email");
                 return;
@@ -34,22 +34,30 @@ namespace PetControlSystem.Domain.Services
             await _repository.Add(customer);
         }
 
-        public async Task Update(Guid id, Customer customer)
+        public async Task Update(Guid id, Customer input)
         {
-            if (ExecuteValidation(new CustomerValidation(), customer)) return;
-            
-            if (_repository.GetById(customer.Id) is null)
+            if (!ExecuteValidation(new CustomerValidation(), input)) return;
+
+            var result = await _repository.GetById(id);
+
+            if (result is null)
             {
                 Notify("Customer not found");
                 return;
             }
 
-            await _repository.Update(customer);
+            result.Update(input.Name!, 
+                input.Email!, 
+                input.Phone!, 
+                input.Document!, 
+                input.Address);
+
+            await _repository.Update(result);
         }
 
         public async Task Delete(Guid id)
         {
-            if (_repository.GetById(id) is null)
+            if (await _repository.GetById(id) is null)
             {
                 Notify("Customer not found");
                 return;

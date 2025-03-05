@@ -3,18 +3,15 @@ using PetControlSystem.Domain.Entities.Validations;
 using PetControlSystem.Domain.Interfaces;
 using PetControlSystem.Domain.Notifications;
 using PetControlSystem.Domain.Security;
-using PetControlSystem.Domain.Utils;
 namespace PetControlSystem.Domain.Services
 {
     public class UserService : BaseService, IUserService
     {
         private readonly IUserRepository _repository;
-        private readonly TokenService _tokenService;
 
-        public UserService(IUserRepository repository, TokenService tokenService, INotificator notificator) : base(notificator)
+        public UserService(IUserRepository repository, INotificator notificator) : base(notificator)
         {
             _repository = repository;
-            _tokenService = tokenService;
         }
 
         public async Task Register(User user)
@@ -28,21 +25,50 @@ namespace PetControlSystem.Domain.Services
                 return;
             }
 
-            await _repository.Add(user);
-        }
-
-        public async Task Update(Guid id, User user)
-        {
-            if (!ExecuteValidation(new UserValidation(), user))
-                return;
-
-            if (_repository.Get(u => u.Document == user.Document && u.Id != id).Result.Any())
+            if (_repository.Get(u => u.Document == user.Document).Result.Any())
             {
                 Notify("There is already User with this Document");
                 return;
             }
 
-            await _repository.Update(user);
+            await _repository.Add(user);
+        }
+
+        public async Task Update(Guid id, User input)
+        {
+            if (!ExecuteValidation(new UserValidation(), input))
+                return;
+
+            var result = await _repository.GetById(id);
+
+            if (result is null)
+            {
+                Notify("User not found");
+                return;
+            }
+
+            if (_repository.Get(u => u.Document == input.Document && u.Id != id).Result.Any())
+            {
+                Notify("There is already User with this Document");
+                return;
+            }
+
+            if (_repository.Get(u => u.Email == input.Email && u.Id != id).Result.Any())
+            {
+                Notify("There is already User with this Email");
+                return;
+            }
+
+            result.Update(input.Name!, 
+                input.Email!, 
+                input.Phone!, 
+                input.Document!, 
+                input.Password, 
+                input.DocumentType, 
+                input.Type, 
+                input.Address);
+
+            await _repository.Update(result);
         }
 
         public async Task Delete(Guid id)

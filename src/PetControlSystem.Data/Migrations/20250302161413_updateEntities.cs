@@ -6,29 +6,31 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetControlSystem.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class updateEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Address",
+                name: "Customer",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Street = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Number = table.Column<string>(type: "varchar(10)", nullable: false),
-                    Complement = table.Column<string>(type: "varchar(100)", nullable: true),
-                    Neighborhood = table.Column<string>(type: "varchar(100)", nullable: false),
-                    City = table.Column<string>(type: "varchar(100)", nullable: false),
-                    State = table.Column<string>(type: "varchar(100)", nullable: false),
-                    PostalCode = table.Column<string>(type: "varchar(8)", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Name = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Phone = table.Column<string>(type: "varchar(20)", nullable: false),
+                    Document = table.Column<string>(type: "varchar(14)", nullable: false),
+                    Address_Street = table.Column<string>(type: "varchar(100)", nullable: true),
+                    Address_Number = table.Column<string>(type: "varchar(10)", nullable: true),
+                    Address_Complement = table.Column<string>(type: "varchar(50)", nullable: true),
+                    Address_Neighborhood = table.Column<string>(type: "varchar(50)", nullable: true),
+                    Address_City = table.Column<string>(type: "varchar(50)", nullable: true),
+                    Address_State = table.Column<string>(type: "varchar(2)", nullable: true),
+                    Address_PostalCode = table.Column<string>(type: "varchar(8)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Address", x => x.Id);
+                    table.PrimaryKey("PK_Customer", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,48 +64,28 @@ namespace PetControlSystem.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Customer",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Email = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Phone = table.Column<string>(type: "varchar(20)", nullable: false),
-                    Document = table.Column<string>(type: "varchar(14)", nullable: false),
-                    AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Customer", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Customer_Address_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Address",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "varchar(100)", nullable: false),
                     Email = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Password = table.Column<string>(type: "varchar(100)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "varchar(20)", nullable: false),
                     Document = table.Column<string>(type: "varchar(14)", nullable: false),
                     DocumentType = table.Column<string>(type: "varchar(2)", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Address_Street = table.Column<string>(type: "varchar(100)", nullable: true),
+                    Address_Number = table.Column<string>(type: "varchar(10)", nullable: true),
+                    Address_Complement = table.Column<string>(type: "varchar(50)", nullable: true),
+                    Address_Neighborhood = table.Column<string>(type: "varchar(50)", nullable: true),
+                    Address_City = table.Column<string>(type: "varchar(50)", nullable: true),
+                    Address_State = table.Column<string>(type: "varchar(2)", nullable: true),
+                    Address_PostalCode = table.Column<string>(type: "varchar(8)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_User_Address_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Address",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -221,12 +203,6 @@ namespace PetControlSystem.Data.Migrations
                 column: "PetSupportsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Customer_AddressId",
-                table: "Customer",
-                column: "AddressId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Order_CustomerId",
                 table: "Order",
                 column: "CustomerId");
@@ -240,12 +216,6 @@ namespace PetControlSystem.Data.Migrations
                 name: "IX_Pets_CustomerId",
                 table: "Pets",
                 column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_AddressId",
-                table: "User",
-                column: "AddressId",
-                unique: true);
         }
 
         /// <inheritdoc />
@@ -277,9 +247,6 @@ namespace PetControlSystem.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customer");
-
-            migrationBuilder.DropTable(
-                name: "Address");
         }
     }
 }

@@ -24,8 +24,5 @@ namespace PetControlSystem.Api.Dto
 
         [Required(ErrorMessage = "The field {0} is required")]
         public AddressDto? AddressDto { get; set; }
-
-        public PetDto? PetDto { get; set; }
-        public List<OrderDto>? OrderDto { get; set; }
     }
 }
