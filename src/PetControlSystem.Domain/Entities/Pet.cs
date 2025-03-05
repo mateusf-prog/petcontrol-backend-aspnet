@@ -1,4 +1,6 @@
 ﻿using PetControlSystem.Domain.Entities.Enums;
+using System.Numerics;
+using System.Reflection.Metadata;
 
 namespace PetControlSystem.Domain.Entities
 {
@@ -15,6 +17,14 @@ namespace PetControlSystem.Domain.Entities
         public Pet() { }
 
         public Pet(string? name, string? description, double? weight, Guid customerId)
+        {
+            Name = name;
+            Description = description;
+            Weight = weight;
+            CustomerId = customerId;
+        }
+
+        public void Update(string name, string description, double? weight, Guid customerId)
         {
             Name = name;
             Description = description;

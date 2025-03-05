@@ -23,5 +23,14 @@
             Document = document;
             Address = address;
         }
+
+        public void Update(string name, string email, string phone, string document, Address? address)
+        {
+            Name = name;
+            Email = email;
+            Phone = phone;
+            Document = document;
+            Address = address;
+        }
     }
 }

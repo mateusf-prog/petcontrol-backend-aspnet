@@ -17,9 +17,20 @@ namespace PetControlSystem.Domain.Entities
 
         public User() { }
 
-        public User(Guid id, string? name, string? email, string? password, string? phone, string? document, DocumentType documentType, UserType type, Address? address)
+        public User(string? name, string? email, string? password, string? phone, string? document, DocumentType documentType, UserType type, Address? address)
         {
-            Id = id;
+            Name = name;
+            Email = email;
+            Password = password;
+            Phone = phone;
+            Document = document;
+            DocumentType = documentType;
+            Type = type;
+            Address = address;
+        }
+
+        public void Update(string? name, string? email, string? password, string? phone, string? document, DocumentType documentType, UserType type, Address? address)
+        {
             Name = name;
             Email = email;
             Password = password;

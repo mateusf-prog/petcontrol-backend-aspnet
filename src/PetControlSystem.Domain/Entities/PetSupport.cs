@@ -20,5 +20,14 @@
             LargeDogPrice = largeDogPrice;
             Appointments = appointments;
         }
+
+        public void Update(string? name, decimal? smallDogPrice, decimal? mediumDogPrice, decimal? largeDogPrice, List<Appointment>? appointments)
+        {
+            Name = name;
+            SmallDogPrice = smallDogPrice;
+            MediumDogPrice = mediumDogPrice;
+            LargeDogPrice = largeDogPrice;
+            Appointments = appointments;
+        }
     }
 }
