@@ -9,12 +9,10 @@ namespace PetControlSystem.Api.Mappers
     {
         public static User ToEntity(this UserDto dto)
         {
-            var id = dto.Id == Guid.Empty ? Guid.NewGuid() : dto.Id;
             var documentType = Enum.Parse<DocumentType>(dto.DocumentType.ToString());
             var userType = Enum.Parse<UserType>(dto.Type.ToString());
 
             return new User(
-                id,
                 dto.Name,
                 dto.Email,
                 dto.Password,

@@ -10,7 +10,7 @@ namespace PetControlSystem.Api.Mappers
                 return new Appointment(
                 dto.Date,
                 dto.Description,
-                dto.Customer.ToEntity(),
+                dto.Customer.Id,
                 dto.Services.Select(s => s.ToEntity()).ToList());
                 
         }

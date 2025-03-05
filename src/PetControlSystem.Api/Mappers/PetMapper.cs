@@ -1,6 +1,5 @@
 ﻿using PetControlSystem.Api.Dto;
 using PetControlSystem.Domain.Entities;
-using PetControlSystem.Domain.Entities.Enums;
 
 namespace PetControlSystem.Api.Mappers
 {
@@ -14,14 +13,16 @@ namespace PetControlSystem.Api.Mappers
                 dto.Weight,
                 dto.CustomerId);
         }
+
         public static PetDto ToDto(this Pet entity)
         {
             return new PetDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
+                Description = entity.Description,
                 Weight = entity.Weight,
-                CustomerId = entity.Customer!.Id
+                CustomerId = entity.CustomerId
             };
         }
     }
