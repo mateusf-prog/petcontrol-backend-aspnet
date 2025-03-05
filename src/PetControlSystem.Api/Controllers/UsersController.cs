@@ -40,7 +40,7 @@ namespace PetControlSystem.Api.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
             await _service.Register(input.ToEntity());
-            return CustomResponse(HttpStatusCode.Created, input);
+            return CustomResponse(HttpStatusCode.Created);
         }
 
         [HttpPut("{id:guid}")]
