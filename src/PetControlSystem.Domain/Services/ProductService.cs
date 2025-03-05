@@ -15,41 +15,44 @@ namespace PetControlSystem.Domain.Services
             _repository = repository;
         }
 
-        public async Task Add(Product product)
+        public async Task Add(Product input)
         {
-            if (!ExecuteValidation(new ProductValidation(), product)) return;
+            if (!ExecuteValidation(new ProductValidation(), input)) return;
 
-            if (_repository.GetById(product.Id) != null)
+            if (await _repository.GetById(input.Id) != null)
             {
                 Notify("There is already a product with this ID");
                 return;
             }
 
-            if (_repository.Get(p => p.Name == product.Name).Result.Any())
+            if (_repository.Get(p => p.Name == input.Name).Result.Any())
             {
                 Notify("There is already a product with this name");
                 return;
             }
 
-            await _repository.Add(product);
+            await _repository.Add(input);
         }
 
-        public async Task Update(Guid id, Product product)
+        public async Task Update(Guid id, Product input)
         {
-            if (!ExecuteValidation(new ProductValidation(), product)) return;
+            if (!ExecuteValidation(new ProductValidation(), input)) return;
 
-            if (_repository.GetById(product.Id) is null)
+            var result = await _repository.GetById(input.Id);
+            if (result is null)
             {
                 Notify("Product not found");
                 return;
             }
 
-            await _repository.Update(product);
+            result.Update(input.Name, input.Price, input.Stock, input.Description);
+
+            await _repository.Update(result);
         }
 
         public async Task Delete(Guid id)
         {
-            if (_repository.GetById(id) is null)
+            if (await _repository.GetById(id) is null)
             {
                 Notify("Product not found");
                 return;

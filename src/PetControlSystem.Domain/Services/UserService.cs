@@ -25,33 +25,50 @@ namespace PetControlSystem.Domain.Services
                 return;
             }
 
-            await _repository.Add(user);
-        }
-
-        public async Task Update(Guid id, User user)
-        {
-            if (!ExecuteValidation(new UserValidation(), user))
-                return;
-
-            if ( await _repository.GetById(id) is null)
-            {
-                Notify("User not found");
-                return;
-            }
-
-            if (_repository.Get(u => u.Document == user.Document && u.Id != id).Result.Any())
+            if (_repository.Get(u => u.Document == user.Document).Result.Any())
             {
                 Notify("There is already User with this Document");
                 return;
             }
 
-            if (_repository.Get(u => u.Email == user.Email && u.Id != id).Result.Any())
+            await _repository.Add(user);
+        }
+
+        public async Task Update(Guid id, User input)
+        {
+            if (!ExecuteValidation(new UserValidation(), input))
+                return;
+
+            var result = await _repository.GetById(id);
+
+            if (result is null)
+            {
+                Notify("User not found");
+                return;
+            }
+
+            if (_repository.Get(u => u.Document == input.Document && u.Id != id).Result.Any())
+            {
+                Notify("There is already User with this Document");
+                return;
+            }
+
+            if (_repository.Get(u => u.Email == input.Email && u.Id != id).Result.Any())
             {
                 Notify("There is already User with this Email");
                 return;
             }
 
-            await _repository.Update(user);
+            result.Update(input.Name!, 
+                input.Email!, 
+                input.Phone!, 
+                input.Document!, 
+                input.Password, 
+                input.DocumentType, 
+                input.Type, 
+                input.Address);
+
+            await _repository.Update(result);
         }
 
         public async Task Delete(Guid id)

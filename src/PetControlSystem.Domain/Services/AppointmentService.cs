@@ -15,36 +15,38 @@ namespace PetControlSystem.Domain.Services
             _repository = appointmentRepository;
         }
 
-        public async Task Add(Appointment appointment)
+        public async Task Add(Appointment input)
         {
-            if (!ExecuteValidation(new AppointmentValidation(), appointment)) return;
+            if (!ExecuteValidation(new AppointmentValidation(), input)) return;
 
-            if (_repository.GetById(appointment.Id) != null)
+            if (await _repository.GetById(input.Id) != null)
             { 
                 Notify("There is already an appointment with this ID");
                 return;
             }
 
-            await _repository.Add(appointment);
+            await _repository.Add(input);
         }
 
-        public async Task Update(Guid id, Appointment appointment)
+        public async Task Update(Guid id, Appointment input)
         {
-            if (!ExecuteValidation(new AppointmentValidation(), appointment)) return;
+            if (!ExecuteValidation(new AppointmentValidation(), input)) return;
 
-            var result = _repository.GetById(appointment.Id);
-            if (result != null)
+            var result = await _repository.GetById(input.Id);
+            if (result is null)
             {
                 Notify("Appointment not found");
                 return;
             }
 
-            await _repository.Update(appointment);
+            result.Update(input.Date, input.Description, input.CustomerId, input.PetSupports);
+
+            await _repository.Update(result);
         }
 
         public async Task Delete(Guid id)
         {
-            if (_repository.GetById(id) is null)
+            if (await _repository.GetById(id) is null)
             {
                 Notify("Appointment not found");
                 return;
@@ -58,6 +60,5 @@ namespace PetControlSystem.Domain.Services
             _repository?.Dispose();
             GC.SuppressFinalize(this);
         }
-
     }
 }

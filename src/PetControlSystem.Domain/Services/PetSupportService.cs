@@ -19,7 +19,7 @@ namespace PetControlSystem.Domain.Services
         {
             if(!ExecuteValidation(new PetSupportValidation(), input)) return;
 
-            if (_repository.GetById(input.Id) != null)
+            if (await _repository.GetById(input.Id) != null)
             {
                 Notify("There is already a pet with this ID");
                 return;
@@ -40,12 +40,14 @@ namespace PetControlSystem.Domain.Services
                 return;
             }
 
-            await _repository.Update(input);
+            result.Update(input.Name, input.SmallDogPrice, input.MediumDogPrice, input.LargeDogPrice, input.Appointments);
+
+            await _repository.Update(result);
         }
 
         public async Task Delete(Guid id)
         {
-            if (_repository.GetById(id) is null)
+            if (await _repository.GetById(id) is null)
             {
                 Notify("PetSupport not found");
                 return;
