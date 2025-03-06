@@ -32,7 +32,7 @@ namespace PetControlSystem.Domain.Services
         {
             if (!ExecuteValidation(new PetSupportValidation(), input)) return;
 
-            var result = await _repository.GetById(input.Id);
+            var result = await _repository.GetById(id);
 
             if (result is null)
             {

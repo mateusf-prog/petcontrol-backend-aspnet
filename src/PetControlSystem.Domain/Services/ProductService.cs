@@ -38,7 +38,7 @@ namespace PetControlSystem.Domain.Services
         {
             if (!ExecuteValidation(new ProductValidation(), input)) return;
 
-            var result = await _repository.GetById(input.Id);
+            var result = await _repository.GetById(id);
             if (result is null)
             {
                 Notify("Product not found");
