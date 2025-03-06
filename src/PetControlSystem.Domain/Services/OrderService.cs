@@ -14,13 +14,11 @@ namespace PetControlSystem.Domain.Services
         public OrderService(IOrderRepository repository,
                             INotificator notificator,
                             IProductRepository productRepository,
-                            IProductService productService,
                             ICustomerRepository customerRepostiory) : base(notificator)
         {
             _repository = repository;
             _productRepository = productRepository;
             _customerRepository = customerRepostiory;
-
         }
 
         public async Task Add(Order input)
@@ -79,10 +77,18 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Delete(Guid id)
         {
-            if (await _repository.GetById(id) is null)
+            var result = await _repository.GetById(id);
+            if (result is null)
             {
                 Notify("Order not found");
                 return;
+            }
+
+            foreach (var orderProduct in result.OrderProducts)
+            {
+                var product = await _productRepository.GetById(orderProduct.ProductId);
+                product.Update(product.Name, product.Price, product.Stock + orderProduct.Quantity, product.Description);
+                await _productRepository.Update(product);
             }
 
             await _repository.Remove(id);
