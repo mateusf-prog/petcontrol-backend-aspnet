@@ -1,4 +1,5 @@
-﻿namespace PetControlSystem.Domain.Entities
+﻿
+namespace PetControlSystem.Domain.Entities
 {
     public class Product : Entity
     {
@@ -8,9 +9,8 @@
         public string? Description { get; private set; }
 
         /* EF Relations */
-        public List<Order>? Orders { get; private set; } = [];
+        public List<OrderProduct> OrderProducts { get; private set; } = [];
 
-        // Public parameterless constructor
         public Product() { }
 
         public Product(string? name, decimal price, int stock, string? description)

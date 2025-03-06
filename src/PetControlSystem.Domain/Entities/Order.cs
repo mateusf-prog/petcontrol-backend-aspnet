@@ -8,22 +8,20 @@
         /* EF Relations */
         public Guid CustomerId { get; private set; }
         public Customer Customer { get; private set; }
-        public List<Product> Products { get; private set; } = [];
+        public List<OrderProduct> OrderProducts { get; private set; } = [];
 
         public Order() { }
 
-        public Order(Guid customerId, List<Product> products)
+        public Order(Guid customerId, List<OrderProduct> orderProducts)
         {
             CustomerId = customerId;
-            Products = products;
-            TotalPrice = products.Sum(p => p.Price);
+            OrderProducts = orderProducts;
         }
 
-        public void Update(Customer customer, List<Product> products)
+        public void Update(Customer customer, List<OrderProduct> orderProducts)
         {
             Customer = customer;
-            Products = products;
-            TotalPrice = products.Sum(p => p.Price);
+            OrderProducts = orderProducts;
         }
     }
 }
