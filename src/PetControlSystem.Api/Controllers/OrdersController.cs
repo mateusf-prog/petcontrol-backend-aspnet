@@ -22,14 +22,14 @@ namespace PetControlSystem.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetAll()
         {
-            var result = await _repository.GetAll();
+            var result = await _repository.GetAllOrdersWithProducts();
             return result.Select(o => o.ToDto()).ToList();
         }
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<OrderDto>> GetById(Guid id)
         {
-            var result = await _repository.GetById(id);
+            var result = await _repository.GetByIdWithProducts(id);
             if (result is null) return NotFound();
             return result.ToDto();
         }
