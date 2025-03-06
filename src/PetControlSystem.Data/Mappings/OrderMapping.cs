@@ -20,7 +20,8 @@ namespace PetControlSystem.Data.Mappings
             builder
                 .HasMany(o => o.OrderProducts)
                 .WithOne(op => op.Order)
-                .HasForeignKey(op => op.OrderId);
+                .HasForeignKey(op => op.OrderId)
+                .OnDelete(DeleteBehavior.Cascade); 
 
             builder
                 .HasOne(o => o.Customer)
