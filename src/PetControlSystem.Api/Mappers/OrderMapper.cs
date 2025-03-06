@@ -9,7 +9,8 @@ namespace PetControlSystem.Api.Mappers
         {
             return new Order(
                 dto.CustomerId,
-                dto.Products.Select(p => p.ToEntity()).ToList());
+                dto.Products.Select(p => p.ToEntity()).ToList(),
+                dto.TotalPrice);
         }
 
         public static OrderDto ToDto(this Order entity)
