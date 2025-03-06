@@ -19,6 +19,7 @@ namespace PetControlSystem.Api.Extensions
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPetSupportRepository, PetSupportRepository>();
+            services.AddScoped<IOrderProductRepository, OrderProductRepository>();
 
             // domain
             services.AddScoped<IAppointmentService, AppointmentService>();
