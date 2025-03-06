@@ -18,8 +18,9 @@ namespace PetControlSystem.Data.Mappings
                 .IsRequired();
 
             builder
-                .HasMany(o => o.Products)
-                .WithMany(p => p.Orders);
+                .HasMany(o => o.OrderProducts)
+                .WithOne(op => op.Order)
+                .HasForeignKey(op => op.OrderId);
 
             builder
                 .HasOne(o => o.Customer)

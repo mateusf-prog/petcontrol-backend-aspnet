@@ -27,8 +27,9 @@ namespace PetControlSystem.Data.Mappings
                 .HasColumnType("varchar(400)");
 
             builder
-                .HasMany(p => p.Orders)
-                .WithMany(o => o.Products);
+                .HasMany(o => o.OrderProducts)
+                .WithOne(op => op.Product)
+                .HasForeignKey(op => op.ProductId);
         }
     }
 }
