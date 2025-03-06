@@ -8,17 +8,17 @@ namespace PetControlSystem.Api.Mappers
         public static Order ToEntity(this OrderDto dto)
         {
             return new Order(
-                dto.Customer.ToEntity(),
+                dto.CustomerId,
                 dto.Products.Select(p => p.ToEntity()).ToList());
-
         }
+
         public static OrderDto ToDto(this Order entity)
         {
             return new OrderDto
             {
                 Id = entity.Id,
                 Date = entity.Date,
-                Customer = entity.Customer.ToDto(),
+                CustomerId = entity.Customer.Id,
                 Products = entity.Products.Select(p => p.ToDto()).ToList()
             };
         }

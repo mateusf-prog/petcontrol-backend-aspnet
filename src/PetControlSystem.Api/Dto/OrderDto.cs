@@ -1,5 +1,4 @@
-﻿using PetControlSystem.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PetControlSystem.Api.Dto
 {
@@ -13,7 +12,7 @@ namespace PetControlSystem.Api.Dto
         public decimal TotalPrice { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
-        public CustomerDto Customer { get; set; }
+        public Guid CustomerId { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
         public List<ProductDto> Products { get; set; }

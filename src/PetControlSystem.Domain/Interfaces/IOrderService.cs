@@ -6,5 +6,6 @@ namespace PetControlSystem.Domain.Interfaces
     {
         Task Add(Order order);
         Task Delete(Guid id);
+        Task Update(Guid id, Order order);
     }
 }

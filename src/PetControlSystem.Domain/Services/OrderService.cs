@@ -28,6 +28,22 @@ namespace PetControlSystem.Domain.Services
             await _repository.Add(input);
         }
 
+        public async Task Update(Guid id, Order input)
+        {
+            if (!ExecuteValidation(new OrderValidation(), input)) return;
+
+            var result = await _repository.GetById(id);
+            if (result is null)
+            {
+                Notify("Order not found");
+                return;
+            }
+
+            result.Update(input.Customer, input.Products);
+
+            await _repository.Update(result);
+        }
+
         public async Task Delete(Guid id)
         {
             if (await _repository.GetById(id) is null)
