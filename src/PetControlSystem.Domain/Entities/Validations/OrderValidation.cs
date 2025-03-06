@@ -6,11 +6,11 @@ namespace PetControlSystem.Domain.Entities.Validations
     {
         public OrderValidation()
         {
-            RuleFor(o => o.Products)
+            RuleFor(o => o.OrderProducts)
                 .NotEmpty().WithMessage("The {PropertyName} must have at least one product.")
                 .NotNull().WithMessage("The {PropertyName} must have at least one product.");
 
-            RuleFor(o => o.Customer)
+            RuleFor(o => o.CustomerId)
                 .NotEmpty().WithMessage("The field {PropertyName} is required");
         }
     }
