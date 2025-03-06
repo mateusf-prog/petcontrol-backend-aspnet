@@ -15,6 +15,6 @@ namespace PetControlSystem.Api.Dto
         public Guid CustomerId { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
-        public List<ProductDto> Products { get; set; }
+        public List<OrderProductDto> Products { get; set; }
     }
 }

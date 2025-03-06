@@ -18,8 +18,8 @@ namespace PetControlSystem.Api.Mappers
             {
                 Id = entity.Id,
                 Date = entity.Date,
-                CustomerId = entity.Customer.Id,
-                Products = entity.Products.Select(p => p.ToDto()).ToList()
+                CustomerId = entity.CustomerId,
+                Products = entity.OrderProducts.Select(p => p.ToDto()).ToList()
             };
         }
     }
