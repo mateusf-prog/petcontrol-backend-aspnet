@@ -37,21 +37,6 @@ namespace PetControlSystem.Data.Migrations
                     b.ToTable("AppointmentPetSupport");
                 });
 
-            modelBuilder.Entity("OrderProduct", b =>
-                {
-                    b.Property<Guid>("OrdersId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProductsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("OrdersId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("OrderProduct");
-                });
-
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Appointment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -122,6 +107,33 @@ namespace PetControlSystem.Data.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("PetControlSystem.Domain.Entities.OrderProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderProduct");
                 });
 
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Pet", b =>
@@ -253,19 +265,6 @@ namespace PetControlSystem.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OrderProduct", b =>
-                {
-                    b.HasOne("PetControlSystem.Domain.Entities.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .IsRequired();
-
-                    b.HasOne("PetControlSystem.Domain.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Appointment", b =>
                 {
                     b.HasOne("PetControlSystem.Domain.Entities.Customer", "Customer")
@@ -331,6 +330,23 @@ namespace PetControlSystem.Data.Migrations
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("PetControlSystem.Domain.Entities.OrderProduct", b =>
+                {
+                    b.HasOne("PetControlSystem.Domain.Entities.Order", "Order")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("OrderId")
+                        .IsRequired();
+
+                    b.HasOne("PetControlSystem.Domain.Entities.Product", "Product")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("ProductId")
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Pet", b =>
                 {
                     b.HasOne("PetControlSystem.Domain.Entities.Customer", "Customer")
@@ -393,6 +409,16 @@ namespace PetControlSystem.Data.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Pets");
+                });
+
+            modelBuilder.Entity("PetControlSystem.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("OrderProducts");
+                });
+
+            modelBuilder.Entity("PetControlSystem.Domain.Entities.Product", b =>
+                {
+                    b.Navigation("OrderProducts");
                 });
 #pragma warning restore 612, 618
         }

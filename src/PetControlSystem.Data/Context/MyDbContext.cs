@@ -17,6 +17,7 @@ namespace PetControlSystem.Data.Context
         public DbSet<Appointment> Appointment { get; set; }
         public DbSet<PetSupport> PetSupport { get; set; }
         public DbSet<Pet> Pets { get; set; }
+        public DbSet<OrderProduct> OrderProduct { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
