@@ -8,15 +8,15 @@ namespace PetControlSystem.Domain.Entities.Validations
         {
             RuleFor(p => p.Name)
                 .NotEmpty().WithMessage("The field {PropertyName} is required")
-                .Length(3, 50).WithMessage("The field {PropertyName} must have between {min} and {max} characters");
+                .Length(3, 50).WithMessage("The field {PropertyName} must have between {MinLength} and {MaxLength} characters");
 
             RuleFor(p => p.Stock)
                 .NotEmpty().WithMessage("The field {PropertyName} is required")
-                .GreaterThan(0).WithMessage("The field {PropertyName} must be greater than {min}");
+                .GreaterThan(0).WithMessage("The field {PropertyName} must be greater than {ComparisonValue}");
 
             RuleFor(p => p.Price)
                 .NotEmpty().WithMessage("The field {PropertyName} is required")
-                .GreaterThan(0).WithMessage("The field {PropertyName} must be greater than {min}");
+                .GreaterThan(0).WithMessage("The field {PropertyName} must be greater than {ComparisonValue}");
         }
     }
 }
