@@ -8,20 +8,42 @@ namespace PetControlSystem.Domain.Services
     public class AppointmentService : BaseService, IAppointmentService
     {
         private readonly IAppointmentRepository _repository;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly IPetSupportService _petSupportService;
 
         public AppointmentService(IAppointmentRepository appointmentRepository,
-                                  INotificator notificator) : base(notificator)
+                                  INotificator notificator,
+                                  ICustomerRepository customerRepository,
+                                  IPetSupportService petSupportService) : base(notificator)
         {
             _repository = appointmentRepository;
+            _customerRepository = customerRepository;
+            _petSupportService = petSupportService;
         }
 
         public async Task Add(Appointment input)
         {
             if (!ExecuteValidation(new AppointmentValidation(), input)) return;
 
-            if (await _repository.GetById(input.Id) != null)
-            { 
-                Notify("There is already an appointment with this ID");
+            var customer = await _customerRepository.GetCustomerWithPets(input.CustomerId);
+            if (customer is null)
+            {
+                Notify("Customer not found");
+                return;
+            }
+
+            if (!customer.Pets.Select(p => p.Id == input.PetId).FirstOrDefault())
+            {
+                Notify("Pet not found");
+                return;
+            }
+
+            var petSupportIds = input.AppointmentPetSupports.Select(ps => ps.PetSupportId).ToList();
+            var petSupports = await _petSupportService.GetPetSupportsByIds(petSupportIds);
+
+            if (petSupports.Count != petSupportIds.Count)
+            {
+                Notify("One or more PetSupports not found");
                 return;
             }
 
@@ -32,14 +54,14 @@ namespace PetControlSystem.Domain.Services
         {
             if (!ExecuteValidation(new AppointmentValidation(), input)) return;
 
-            var result = await _repository.GetById(input.Id);
+            var result = await _repository.GetById(id);
             if (result is null)
             {
                 Notify("Appointment not found");
                 return;
             }
 
-            result.Update(input.Date, input.Description, input.CustomerId, input.PetSupports);
+            result.Update(input.Date, input.Description,input.TotalPrice, input.CustomerId, input.PetId, input.AppointmentPetSupports);
 
             await _repository.Update(result);
         }

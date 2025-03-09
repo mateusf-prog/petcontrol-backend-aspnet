@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetControlSystem.Api.Dto;
 using PetControlSystem.Api.Mappers;
+using PetControlSystem.Domain.Entities;
 using PetControlSystem.Domain.Interfaces;
 using PetControlSystem.Domain.Notifications;
 using System.Net;
@@ -13,7 +14,9 @@ namespace PetControlSystem.Api.Controllers
         private readonly IAppointmentService _service;
         private readonly IAppointmentRepository _repository;
 
-        public AppointmentsController(IAppointmentService service,IAppointmentRepository repository, INotificator notificator) : base(notificator)
+        public AppointmentsController(IAppointmentService service,
+            IAppointmentRepository repository, 
+            INotificator notificator) : base(notificator)
         {
             _service = service;
             _repository = repository;
@@ -22,8 +25,8 @@ namespace PetControlSystem.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAll()
         {
-            var result = await _repository.GetAll();
-            return result.Select(a => a.ToDto()).ToList();
+            var result = await _repository.GetAlllAppointmentsWithPetSupports();
+            return result.Select(o => o.ToDto()).ToList();
         }
 
         [HttpGet("{id:guid}")]
@@ -39,14 +42,13 @@ namespace PetControlSystem.Api.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
             await _service.Add(input.ToEntity());
-            return CustomResponse(HttpStatusCode.Created, input);
+            return CustomResponse(HttpStatusCode.Created);
         }
 
         [HttpPut("{id:guid}")]
         public async Task<ActionResult> Update(Guid id, AppointmentDto input)
         {
-            if (!ModelState.IsValid) return CustomResponse(ModelState);
-            await _service.Update(id, input.ToEntity());
+            // todo
             return CustomResponse(HttpStatusCode.NoContent);
         }
 
