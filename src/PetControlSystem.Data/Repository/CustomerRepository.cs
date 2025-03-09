@@ -9,9 +9,11 @@ namespace PetControlSystem.Data.Repository
     {
         public CustomerRepository(MyDbContext context) : base(context) { }
 
-        public async Task<List<Pet>> GetPetsFromCustomer(Guid customerId)
+        public async Task<Customer?> GetCustomerWithPets(Guid id)
         {
-            return await Db.Set<Pet>().Where(p => p.CustomerId == customerId).ToListAsync();
+            return await Db.Set<Customer>()
+                .Include(c => c.Pets)
+                .FirstOrDefaultAsync(o => o.Id == id);
         }
     }
 }
