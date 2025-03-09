@@ -2,6 +2,7 @@
 using PetControlSystem.Domain.Entities.Validations;
 using PetControlSystem.Domain.Interfaces;
 using PetControlSystem.Domain.Notifications;
+using System.Net;
 
 namespace PetControlSystem.Domain.Services
 {
@@ -60,6 +61,22 @@ namespace PetControlSystem.Domain.Services
         {
             _repository?.Dispose();
             GC.SuppressFinalize(this);
+        }
+
+        public async Task<List<PetSupport>>? GetPetSupportsByIds(List<Guid> guids)
+        {
+            var petSupports = new List<PetSupport>();
+            foreach (Guid id in guids)
+            {
+                var petSupport = await _repository.GetById(id);
+                if (petSupport is null)
+                {
+                    Notify($"Service not found - ID {id}");
+                    return petSupports;
+                }
+                petSupports.Add(petSupport);
+            }
+            return petSupports;
         }
     }
 }
