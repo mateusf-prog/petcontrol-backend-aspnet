@@ -14,12 +14,15 @@ namespace PetControlSystem.Api.Dto
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
-        public List<PetSupportDto> Services { get; set; }
+        public decimal? TotalPrice { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
-        public PetDto? Pet { get; set; }
+        public List<AppointmentPetSupportDto> PetSupports { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
-        public CustomerDto Customer { get; set; }
+        public Guid PetId { get; set; }
+
+        [Required(ErrorMessage = "The field {0} is required")]
+        public Guid CustomerId { get; set; }
     }
 }

@@ -7,13 +7,15 @@ namespace PetControlSystem.Api.Mappers
     {
         public static Appointment ToEntity(this AppointmentDto dto)
         {
-                return new Appointment(
-                dto.Date,
-                dto.Description,
-                dto.Customer.Id,
-                dto.Services.Select(s => s.ToEntity()).ToList());
-                
+            return new Appointment(
+            dto.Date,
+            dto.Description,
+            dto.TotalPrice,
+            dto.CustomerId,
+            dto.PetId,
+            dto.PetSupports.Select(dto => dto.ToEntity()).ToList());
         }
+
         public static AppointmentDto ToDto(this Appointment entity)
         {
             return new AppointmentDto
@@ -21,8 +23,10 @@ namespace PetControlSystem.Api.Mappers
                 Id = entity.Id,
                 Date = entity.Date,
                 Description = entity.Description,
-                Customer = entity.Customer.ToDto(),
-                Services = entity.PetSupports.Select(s => s.ToDto()).ToList()
+                CustomerId = entity.CustomerId,
+                PetId = entity.PetId,
+                TotalPrice = entity.TotalPrice,
+                PetSupports = entity.AppointmentPetSupports.Select(entity => entity.ToDto()).ToList()
             };
         }
     }
