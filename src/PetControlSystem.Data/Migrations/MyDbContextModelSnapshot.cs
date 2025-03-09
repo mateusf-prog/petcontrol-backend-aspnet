@@ -22,21 +22,6 @@ namespace PetControlSystem.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AppointmentPetSupport", b =>
-                {
-                    b.Property<Guid>("AppointmentsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PetSupportsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("AppointmentsId", "PetSupportsId");
-
-                    b.HasIndex("PetSupportsId");
-
-                    b.ToTable("AppointmentPetSupport");
-                });
-
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Appointment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -53,11 +38,45 @@ namespace PetControlSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(500)");
 
+                    b.Property<Guid>("PetId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PetSupportId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
+                    b.HasIndex("PetId");
+
+                    b.HasIndex("PetSupportId");
+
                     b.ToTable("Appointment");
+                });
+
+            modelBuilder.Entity("PetControlSystem.Domain.Entities.AppointmentPetSupport", b =>
+                {
+                    b.Property<Guid>("AppointmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PetSupportId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("AppointmentId", "PetSupportId");
+
+                    b.HasIndex("PetSupportId");
+
+                    b.ToTable("AppointmentPetSupport");
                 });
 
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Customer", b =>
@@ -99,7 +118,8 @@ namespace PetControlSystem.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("TotalPrice")
+                    b.Property<decimal?>("TotalPrice")
+                        .IsRequired()
                         .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
@@ -252,19 +272,6 @@ namespace PetControlSystem.Data.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("AppointmentPetSupport", b =>
-                {
-                    b.HasOne("PetControlSystem.Domain.Entities.Appointment", null)
-                        .WithMany()
-                        .HasForeignKey("AppointmentsId")
-                        .IsRequired();
-
-                    b.HasOne("PetControlSystem.Domain.Entities.PetSupport", null)
-                        .WithMany()
-                        .HasForeignKey("PetSupportsId")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Appointment", b =>
                 {
                     b.HasOne("PetControlSystem.Domain.Entities.Customer", "Customer")
@@ -272,7 +279,35 @@ namespace PetControlSystem.Data.Migrations
                         .HasForeignKey("CustomerId")
                         .IsRequired();
 
+                    b.HasOne("PetControlSystem.Domain.Entities.Pet", "Pet")
+                        .WithMany()
+                        .HasForeignKey("PetId")
+                        .IsRequired();
+
+                    b.HasOne("PetControlSystem.Domain.Entities.PetSupport", null)
+                        .WithMany("Appointments")
+                        .HasForeignKey("PetSupportId");
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Pet");
+                });
+
+            modelBuilder.Entity("PetControlSystem.Domain.Entities.AppointmentPetSupport", b =>
+                {
+                    b.HasOne("PetControlSystem.Domain.Entities.Appointment", "Appointment")
+                        .WithMany("AppointmentPetSupports")
+                        .HasForeignKey("AppointmentId")
+                        .IsRequired();
+
+                    b.HasOne("PetControlSystem.Domain.Entities.PetSupport", "PetSupport")
+                        .WithMany("AppointmentPetSupports")
+                        .HasForeignKey("PetSupportId")
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
+
+                    b.Navigation("PetSupport");
                 });
 
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Customer", b =>
@@ -402,6 +437,11 @@ namespace PetControlSystem.Data.Migrations
                     b.Navigation("Address");
                 });
 
+            modelBuilder.Entity("PetControlSystem.Domain.Entities.Appointment", b =>
+                {
+                    b.Navigation("AppointmentPetSupports");
+                });
+
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Customer", b =>
                 {
                     b.Navigation("Appointments");
@@ -414,6 +454,13 @@ namespace PetControlSystem.Data.Migrations
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Order", b =>
                 {
                     b.Navigation("OrderProducts");
+                });
+
+            modelBuilder.Entity("PetControlSystem.Domain.Entities.PetSupport", b =>
+                {
+                    b.Navigation("AppointmentPetSupports");
+
+                    b.Navigation("Appointments");
                 });
 
             modelBuilder.Entity("PetControlSystem.Domain.Entities.Product", b =>
