@@ -23,8 +23,10 @@ namespace PetControlSystem.Data.Mappings
                 .HasForeignKey(a => a.CustomerId);
 
             builder
-                .HasMany(a => a.PetSupports)
-                .WithMany(ps => ps.Appointments);
+                .HasOne(a => a.Pet)
+                .WithMany()
+                .HasForeignKey(a => a.PetId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -27,10 +27,6 @@ namespace PetControlSystem.Data.Mappings
                 .Property(p => p.LargeDogPrice)
                 .IsRequired()
                 .HasColumnType("decimal(10,2)");
-
-            builder
-                .HasMany(p => p.Appointments)
-                .WithMany(a => a.PetSupports);
         }
     }
 }
