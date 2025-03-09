@@ -4,28 +4,35 @@
     {
         public DateTime Date { get; private set; }
         public string? Description { get; private set; }
+        public decimal? TotalPrice { get; private set; }
 
         /* EF Relations */
         public Guid CustomerId { get; private set; }
         public Customer? Customer { get; private set; }
-        public List<PetSupport> PetSupports { get; private set; }
+        public Guid PetId { get; private set; }
+        public Pet? Pet { get; private set; }
+        public List<AppointmentPetSupport> AppointmentPetSupports { get; private set; }
 
         public Appointment() { }
 
-        public Appointment(DateTime date, string? description, Guid customerId, List<PetSupport> services)
+        public Appointment(DateTime date, string? description, decimal? totalPrice, Guid customerId, Guid petId, List<AppointmentPetSupport> petSupports)
         {
             Date = date;
             Description = description;
+            TotalPrice = totalPrice;
             CustomerId = customerId;
-            PetSupports = services;
+            PetId = petId;
+            AppointmentPetSupports = petSupports;
         }
 
-        public void Update(DateTime date, string? description, Guid customerId, List<PetSupport> services)
+        public void Update(DateTime date, string? description, decimal? totalPrice, Guid customerId, Guid petid, List<AppointmentPetSupport> petSupports)
         {
             Date = date;
             Description = description;
+            TotalPrice = totalPrice;
             CustomerId = customerId;
-            PetSupports = services;
+            PetId = petid;
+            AppointmentPetSupports = petSupports;
         }
     }
 }

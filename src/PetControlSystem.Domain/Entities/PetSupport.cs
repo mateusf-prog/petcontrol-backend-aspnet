@@ -7,6 +7,8 @@
         public decimal? MediumDogPrice { get; private set; }
         public decimal? LargeDogPrice { get; private set; }
 
+        public List<AppointmentPetSupport> AppointmentPetSupports { get; private set; }
+
         /* EF Relations */
         public List<Appointment>? Appointments { get; private set; }
 
