@@ -77,7 +77,7 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Delete(Guid id)
         {
-            var result = await _repository.GetById(id);
+            var result = await _repository.GetByIdWithProducts(id);
             if (result is null)
             {
                 Notify("Order not found");
