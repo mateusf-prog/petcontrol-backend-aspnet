@@ -9,7 +9,9 @@ namespace PetControlSystem.Data.Mappings
         public void Configure(EntityTypeBuilder<AppointmentPetSupport> builder)
         {
             builder
-                .HasKey(aps => new { aps.AppointmentId, aps.PetSupportId }); 
+                .Property(ap => ap.Price)
+                .IsRequired()
+                .HasColumnType("decimal(10,2)");
 
             builder
                 .HasOne(aps => aps.Appointment)

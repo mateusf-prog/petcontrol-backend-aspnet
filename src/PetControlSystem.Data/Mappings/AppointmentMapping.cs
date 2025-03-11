@@ -18,9 +18,21 @@ namespace PetControlSystem.Data.Mappings
                 .HasColumnType("varchar(500)");
 
             builder
+                .Property(a => a.TotalPrice)
+                .IsRequired()
+                .HasColumnType("decimal(10,2)");
+
+            builder
                 .HasOne(a => a.Customer)
                 .WithMany(c => c.Appointments)
-                .HasForeignKey(a => a.CustomerId);
+                .HasForeignKey(a => a.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(a => a.AppointmentPetSupports)
+                .WithOne(aps => aps.Appointment)
+                .HasForeignKey(aps => aps.AppointmentId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder
                 .HasOne(a => a.Pet)
