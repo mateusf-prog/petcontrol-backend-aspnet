@@ -12,9 +12,8 @@
 
         public AppointmentPetSupport() { }
 
-        public AppointmentPetSupport(Guid appointmentId, Guid petSupportId, decimal price)
+        public AppointmentPetSupport(Guid petSupportId, decimal price)
         {
-            AppointmentId = appointmentId;
             PetSupportId = petSupportId;
             Price = price;
         }
