@@ -15,5 +15,12 @@ namespace PetControlSystem.Data.Repository
                 .Include(a => a.AppointmentPetSupports)
                 .ToListAsync();
         }
+
+        public Task<Appointment> GetByIdWithPetSupport(Guid id)
+        {
+            return Db.Set<Appointment>()
+                .Include(a => a.AppointmentPetSupports)
+                .FirstOrDefaultAsync(a => a.Id == id);
+        }
     }
 }
