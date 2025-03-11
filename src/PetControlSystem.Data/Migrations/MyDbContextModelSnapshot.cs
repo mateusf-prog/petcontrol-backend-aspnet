@@ -45,7 +45,8 @@ namespace PetControlSystem.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
+                        .IsRequired()
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
@@ -60,19 +61,22 @@ namespace PetControlSystem.Data.Migrations
 
             modelBuilder.Entity("PetControlSystem.Domain.Entities.AppointmentPetSupport", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("AppointmentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PetSupportId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(10,2)");
 
-                    b.HasKey("AppointmentId", "PetSupportId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
 
                     b.HasIndex("PetSupportId");
 
