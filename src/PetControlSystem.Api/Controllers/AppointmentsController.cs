@@ -32,7 +32,7 @@ namespace PetControlSystem.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<AppointmentDto>> GetById(Guid id)
         {
-            var result = await _repository.GetById(id);
+            var result = await _repository.GetByIdWithPetSupport(id);
             if (result is null) return NotFound();
             return result.ToDto();
         }
@@ -48,7 +48,8 @@ namespace PetControlSystem.Api.Controllers
         [HttpPut("{id:guid}")]
         public async Task<ActionResult> Update(Guid id, AppointmentDto input)
         {
-            // todo
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+            await _service.Update(id, input.ToEntity());
             return CustomResponse(HttpStatusCode.NoContent);
         }
 

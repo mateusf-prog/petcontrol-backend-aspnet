@@ -38,6 +38,12 @@ namespace PetControlSystem.Domain.Services
                 return;
             }
 
+            if (input.Date < DateTime.Now)
+            {
+                Notify("The appointment date must be greater than now");
+                return;
+            }
+
             var petSupportIds = input.AppointmentPetSupports.Select(ps => ps.PetSupportId).ToList();
             var petSupports = await _petSupportService.GetPetSupportsByIds(petSupportIds);
 
@@ -54,14 +60,43 @@ namespace PetControlSystem.Domain.Services
         {
             if (!ExecuteValidation(new AppointmentValidation(), input)) return;
 
-            var result = await _repository.GetById(id);
+            if (input.Date < DateTime.Now)
+            {
+                Notify("The appointment date must be greater than now");
+                return;
+            }
+
+            var result = await _repository.GetByIdWithPetSupport(id);
             if (result is null)
             {
                 Notify("Appointment not found");
                 return;
             }
 
-            result.Update(input.Date, input.Description,input.TotalPrice, input.CustomerId, input.PetId, input.AppointmentPetSupports);
+            if (result.CustomerId != input.CustomerId)
+            {
+                Notify("Customer cannot be changed");
+                return;
+            }
+
+            foreach (var petSupport in input.AppointmentPetSupports)
+            {
+                var petSupportIds = input.AppointmentPetSupports.Select(ps => ps.PetSupportId).ToList();
+                var petSupports = await _petSupportService.GetPetSupportsByIds(petSupportIds);
+
+                if (petSupports.Count != petSupportIds.Count)
+                {
+                    Notify("One or more PetSupports not found");
+                    return;
+                }
+
+                if (!result.AppointmentPetSupports.Any(ps => ps.PetSupportId == petSupport.PetSupportId))
+                {
+                    result.AppointmentPetSupports.Add(petSupport);
+                }
+            }
+
+            result.Update(input.Date, input.Description, input.TotalPrice, input.CustomerId, input.PetId, result.AppointmentPetSupports);
 
             await _repository.Update(result);
         }
