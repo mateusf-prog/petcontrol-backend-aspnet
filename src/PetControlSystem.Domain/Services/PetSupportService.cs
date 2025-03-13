@@ -2,7 +2,6 @@
 using PetControlSystem.Domain.Entities.Validations;
 using PetControlSystem.Domain.Interfaces;
 using PetControlSystem.Domain.Notifications;
-using System.Net;
 
 namespace PetControlSystem.Domain.Services
 {
@@ -23,6 +22,12 @@ namespace PetControlSystem.Domain.Services
             if (await _repository.GetById(input.Id) != null)
             {
                 Notify("There is already a pet with this ID");
+                return;
+            }
+
+            if (await _repository.Get(ps => ps.Name == input.Name) != null)
+            {
+                Notify("There is already a pet with this name");
                 return;
             }
 
@@ -57,13 +62,7 @@ namespace PetControlSystem.Domain.Services
             await _repository.Remove(id);
         }
 
-        public void Dispose()
-        {
-            _repository?.Dispose();
-            GC.SuppressFinalize(this);
-        }
-
-        public async Task<List<PetSupport>>? GetPetSupportsByIds(List<Guid> guids)
+        public async Task<List<PetSupport>> GetPetSupportsByIds(List<Guid> guids)
         {
             var petSupports = new List<PetSupport>();
             foreach (Guid id in guids)
@@ -77,6 +76,12 @@ namespace PetControlSystem.Domain.Services
                 petSupports.Add(petSupport);
             }
             return petSupports;
+        }
+
+        public void Dispose()
+        {
+            _repository?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
