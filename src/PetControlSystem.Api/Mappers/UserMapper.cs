@@ -1,7 +1,6 @@
 ﻿using PetControlSystem.Api.Dto;
 using PetControlSystem.Domain.Entities;
 using PetControlSystem.Domain.Entities.Enums;
-using PetControlSystem.Domain.Utils;
 
 namespace PetControlSystem.Api.Mappers
 {
