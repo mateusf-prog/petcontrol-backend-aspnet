@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PetControlSystem.Data.Context;
 using PetControlSystem.Api.Extensions;
-using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
