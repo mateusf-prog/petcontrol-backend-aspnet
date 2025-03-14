@@ -14,6 +14,7 @@ namespace PetControlSystem.Api.Extensions
             // data
             services.AddScoped<MyDbContext>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IPetRepository, PetRepository>();
