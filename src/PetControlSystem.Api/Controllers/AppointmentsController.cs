@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetControlSystem.Api.Dto;
 using PetControlSystem.Api.Mappers;
-using PetControlSystem.Domain.Entities;
 using PetControlSystem.Domain.Interfaces;
 using PetControlSystem.Domain.Notifications;
 using System.Net;
 
 namespace PetControlSystem.Api.Controllers
 {
+    [Authorize]
     [Route("api/appointments")]
     public class AppointmentsController : MainController
     {

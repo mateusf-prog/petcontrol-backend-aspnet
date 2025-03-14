@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetControlSystem.Api.Dto;
 using PetControlSystem.Api.Mappers;
 using PetControlSystem.Domain.Interfaces;
@@ -7,6 +8,7 @@ using System.Net;
 
 namespace PetControlSystem.Api.Controllers
 {
+    [Authorize]
     [Route("api/customers")]
     public class CustomersController : MainController
     {
