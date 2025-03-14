@@ -19,7 +19,6 @@ namespace PetControlSystem.Api.Extensions
             services.AddScoped<IPetRepository, PetRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPetSupportRepository, PetSupportRepository>();
             services.AddScoped<IOrderProductRepository, OrderProductRepository>();
 
@@ -29,7 +28,6 @@ namespace PetControlSystem.Api.Extensions
             services.AddScoped<IPetService, PetService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPetSupportService, PetSupportService>();
             services.AddScoped<INotificator, Notificator>();
 
