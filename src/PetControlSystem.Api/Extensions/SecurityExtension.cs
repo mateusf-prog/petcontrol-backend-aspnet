@@ -10,6 +10,10 @@ namespace PetControlSystem.Api.Extensions
     {
         public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
         {
+            var key = Encoding.ASCII.GetBytes(configuration["JwtSecurity:Secret"]);
+            var issuer = configuration["JwtSecurity:Issuer"];
+            var audience = configuration["JwtSecurity:Audience"];
+
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<MyDbContext>();
@@ -25,9 +29,11 @@ namespace PetControlSystem.Api.Extensions
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["JwtSecurity:Secret"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = true,
-                    ValidateAudience = false
+                    ValidateAudience = true,
+                    ValidIssuer = issuer,
+                    ValidAudience = audience
                 };
             });
 
