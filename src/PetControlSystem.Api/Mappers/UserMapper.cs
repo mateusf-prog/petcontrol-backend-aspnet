@@ -1,40 +1,27 @@
-﻿using PetControlSystem.Api.Dto;
-using PetControlSystem.Domain.Entities;
-using PetControlSystem.Domain.Entities.Enums;
+using Microsoft.AspNetCore.Identity;
+using PetControlSystem.Api.Dto;
 
 namespace PetControlSystem.Api.Mappers
 {
     public static class UserMapper
     {
-        public static User ToEntity(this UserDto dto)
+        public static IdentityUser ToEntity(this UserDto userDto)
         {
-            var documentType = Enum.Parse<DocumentType>(dto.DocumentType.ToString());
-            var userType = Enum.Parse<UserType>(dto.Type.ToString());
-
-            return new User(
-                dto.Name,
-                dto.Email,
-                dto.Password,
-                dto.Phone,
-                dto.Document,
-                documentType,
-                userType,
-                dto.AddressDto.ToValueObject());
+            return new IdentityUser
+            {
+                UserName = userDto.UserName,
+                Email = userDto.Email,
+                PhoneNumber = userDto.Phone,
+                PasswordHash = userDto.Password
+            };
         }
 
-        public static UserDto ToDto(this User user)
+        public static IdentityUser ToEntity(this UserLoginDto userLoginDto)
         {
-            return new UserDto
+            return new IdentityUser
             {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password,
-                Phone = user.Phone,
-                Document = user.Document,
-                DocumentType = (int)user.DocumentType,
-                Type = (int)user.Type,
-                AddressDto = user.Address!.ToDto()
+                UserName = userLoginDto.Email,
+                PasswordHash = userLoginDto.Password
             };
         }
     }

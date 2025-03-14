@@ -12,13 +12,13 @@ namespace PetControlSystem.Domain.Services
         private readonly ICustomerRepository _customerRepository;
 
         public OrderService(IOrderRepository repository,
-                            INotificator notificator,
-                            IProductRepository productRepository,
-                            ICustomerRepository customerRepostiory) : base(notificator)
+                    INotificator notificator,
+                    IProductRepository productRepository,
+                    ICustomerRepository customerRepository) : base(notificator)
         {
             _repository = repository;
             _productRepository = productRepository;
-            _customerRepository = customerRepostiory;
+            _customerRepository = customerRepository;
         }
 
         public async Task Add(Order input)
