@@ -2,6 +2,7 @@
 using PetControlSystem.Data.Repository;
 using PetControlSystem.Domain.Interfaces;
 using PetControlSystem.Domain.Notifications;
+using PetControlSystem.Domain.Security;
 using PetControlSystem.Domain.Services;
 
 namespace PetControlSystem.Api.Extensions
@@ -12,6 +13,7 @@ namespace PetControlSystem.Api.Extensions
         {
             // data
             services.AddScoped<MyDbContext>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IPetRepository, PetRepository>();
