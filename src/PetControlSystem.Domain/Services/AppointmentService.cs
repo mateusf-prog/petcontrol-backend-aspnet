@@ -38,12 +38,6 @@ namespace PetControlSystem.Domain.Services
                 return;
             }
 
-            if (input.Date < DateTime.Now)
-            {
-                Notify("The appointment date must be greater than now");
-                return;
-            }
-
             var petSupportIds = input.AppointmentPetSupports.Select(ps => ps.PetSupportId).ToList();
             var petSupports = await _petSupportService.GetPetSupportsByIds(petSupportIds);
 
@@ -59,12 +53,6 @@ namespace PetControlSystem.Domain.Services
         public async Task Update(Guid id, Appointment input)
         {
             if (!ExecuteValidation(new AppointmentValidation(), input)) return;
-
-            if (input.Date < DateTime.Now)
-            {
-                Notify("The appointment date must be greater than now");
-                return;
-            }
 
             var result = await _repository.GetByIdWithPetSupport(id);
             if (result is null)
