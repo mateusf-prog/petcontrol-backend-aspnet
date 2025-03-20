@@ -41,15 +41,15 @@ namespace PetControlSystem.Domain.Services
             {
                 var product = await _productRepository.GetById(orderProduct.ProductId);
 
-                if (product.Stock < orderProduct.Quantity)
+                if (product is null)
                 {
-                    Notify($"Insufficient stock of product {product.Name}");
+                    Notify($"Product not found - ID {orderProduct.ProductId}");
                     return;
                 }
 
-                if (product is null)
+                if (product.Stock < orderProduct.Quantity)
                 {
-                    Notify($"Product not found - ID {product.Id}");
+                    Notify($"Insufficient stock of product - {orderProduct.ProductId}");
                     return;
                 }
 
