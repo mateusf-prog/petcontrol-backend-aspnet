@@ -24,7 +24,7 @@ namespace PetControlSystem.Domain.Security
             {
                 Issuer = _configuration["JwtSecurity:Issuer"],
                 Audience = _configuration["JwtSecurity:Audience"],
-                Expires = System.DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.AddHours(3),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             });
 
