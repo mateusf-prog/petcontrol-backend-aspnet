@@ -24,8 +24,8 @@ namespace UnitTests.Domain.Services
             // Arrange
             var product = new Product("Dog Food", 19.99m, 50, "Premium dog food");
 
-            _repositoryMock.Setup(r => r.GetById(product.Id)).ReturnsAsync((Product)null);
-            _repositoryMock.Setup(r => r.Get(p => p.Name == product.Name)).ReturnsAsync(Enumerable.Empty<Product>());
+            _repositoryMock.Setup(r => r.GetById(product.Id)).ReturnsAsync((Product?)null);
+            _repositoryMock.Setup(r => r.Get(p => p.Name == product.Name)).ReturnsAsync([]);
 
             // Act
             await _service.Add(product);
@@ -55,8 +55,8 @@ namespace UnitTests.Domain.Services
             // Arrange
             var product = new Product("Dog Food", 19.99m, 50, "Premium dog food");
 
-            _repositoryMock.Setup(r => r.GetById(product.Id)).ReturnsAsync((Product)null);
-            _repositoryMock.Setup(r => r.Get(p => p.Name == product.Name)).ReturnsAsync(new List<Product> { product });
+            _repositoryMock.Setup(r => r.GetById(product.Id)).ReturnsAsync((Product?)null);
+            _repositoryMock.Setup(r => r.Get(p => p.Name == product.Name)).ReturnsAsync([product]);
 
             // Act
             await _service.Add(product);
@@ -92,7 +92,7 @@ namespace UnitTests.Domain.Services
             // Arrange
             var updatedProduct = new Product("Cat Food", 15.99m, 30, "Premium cat food");
 
-            _repositoryMock.Setup(r => r.GetById(updatedProduct.Id)).ReturnsAsync((Product)null);
+            _repositoryMock.Setup(r => r.GetById(updatedProduct.Id)).ReturnsAsync((Product?)null);
 
             // Act
             await _service.Update(updatedProduct.Id, updatedProduct);
@@ -123,7 +123,7 @@ namespace UnitTests.Domain.Services
             // Arrange
             var productId = Guid.NewGuid();
 
-            _repositoryMock.Setup(r => r.GetById(productId)).ReturnsAsync((Product)null);
+            _repositoryMock.Setup(r => r.GetById(productId)).ReturnsAsync((Product?)null);
 
             // Act
             await _service.Delete(productId);

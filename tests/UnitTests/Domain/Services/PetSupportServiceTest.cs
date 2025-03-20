@@ -26,7 +26,7 @@ namespace UnitTests.Domain.Services
             // Arrange
             var petSupport = new PetSupport("Maya", 50.00m, 60.00m, 70.00m, []);
 
-            _repositoryMock.Setup(r => r.GetById(petSupport.Id)).ReturnsAsync((PetSupport)null);
+            _repositoryMock.Setup(r => r.GetById(petSupport.Id)).ReturnsAsync((PetSupport?)null);
             _repositoryMock.Setup(r => r.Get(It.IsAny<Expression<Func<PetSupport, bool>>>()))
                    .ReturnsAsync((IEnumerable<PetSupport>?)null);
             // Act
@@ -57,7 +57,7 @@ namespace UnitTests.Domain.Services
             // Arrange
             var petSupport = new PetSupport("Maya", 50.00m, 60.00m, 70.00m, []);
 
-            _repositoryMock.Setup(r => r.GetById(petSupport.Id)).ReturnsAsync((PetSupport)null);
+            _repositoryMock.Setup(r => r.GetById(petSupport.Id)).ReturnsAsync((PetSupport?)null);
             _repositoryMock.Setup(r => r.Get(ps => ps.Name == petSupport.Name)).ReturnsAsync([petSupport]);
 
             // Act
@@ -89,7 +89,7 @@ namespace UnitTests.Domain.Services
             // Arrange
             var input = new PetSupport("Maya", 50.00m, 60.00m, 70.00m, []);
 
-            _repositoryMock.Setup(r => r.GetById(input.Id)).ReturnsAsync((PetSupport)null);
+            _repositoryMock.Setup(r => r.GetById(input.Id)).ReturnsAsync((PetSupport?)null);
 
             // Act
             await _service.Update(input.Id, input);
@@ -120,7 +120,7 @@ namespace UnitTests.Domain.Services
             // Arrange
             var id = Guid.NewGuid();
 
-            _repositoryMock.Setup(r => r.GetById(id)).ReturnsAsync((PetSupport)null);
+            _repositoryMock.Setup(r => r.GetById(id)).ReturnsAsync((PetSupport?)null);
 
             // Act
             await _service.Delete(id);
@@ -158,7 +158,7 @@ namespace UnitTests.Domain.Services
             var ids = new List<Guid> { petSupport1.Id, invalidId };
 
             _repositoryMock.Setup(r => r.GetById(petSupport1.Id)).ReturnsAsync(petSupport1);
-            _repositoryMock.Setup(r => r.GetById(invalidId)).ReturnsAsync((PetSupport)null);
+            _repositoryMock.Setup(r => r.GetById(invalidId)).ReturnsAsync((PetSupport?)null);
 
             // Act
             var result = await _service.GetPetSupportsByIds(ids);

@@ -59,7 +59,7 @@ namespace UnitTests.Domain.Services
             // Arrange
             var input = AppointmentFaker.GetValidAppointmentFaker();
 
-            _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(input.CustomerId)).ReturnsAsync((Customer)null);
+            _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(input.CustomerId)).ReturnsAsync((Customer?)null);
 
             // Act
             await _service.Add(input);
@@ -174,7 +174,7 @@ namespace UnitTests.Domain.Services
             var petSupports = new Faker<PetSupport>().Generate(0);
             var petSupportsIds = input.AppointmentPetSupports.Select(ps => ps.PetSupportId).ToList();
 
-            _repositoryMock.Setup(r => r.GetByIdWithPetSupport(input.Id)).ReturnsAsync((Appointment)null);
+            _repositoryMock.Setup(r => r.GetByIdWithPetSupport(input.Id)).ReturnsAsync((Appointment?)null);
             _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(input.CustomerId)).ReturnsAsync(customer);
             _petSupportServiceMock.Setup(p => p.GetPetSupportsByIds(petSupportsIds)).ReturnsAsync(petSupports);
             _repositoryMock.Setup(r => r.Update(input));
@@ -254,7 +254,7 @@ namespace UnitTests.Domain.Services
             // Arrange
             var id = Guid.NewGuid();
 
-            _repositoryMock.Setup(r => r.GetById(id)).ReturnsAsync((Appointment)null);
+            _repositoryMock.Setup(r => r.GetById(id)).ReturnsAsync((Appointment?)null);
 
             // Act
             await _service.Delete(id);

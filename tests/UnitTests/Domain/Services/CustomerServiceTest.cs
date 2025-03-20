@@ -87,7 +87,7 @@ namespace UnitTests.Domain.Services
             // Arrange
             var input = CustomerFaker.GetValidCustomerFaker();
 
-            _repositoryMock.Setup(r => r.GetById(input.Id)).ReturnsAsync((Customer)null);
+            _repositoryMock.Setup(r => r.GetById(input.Id)).ReturnsAsync((Customer?)null);
 
             // Act
             await _service.Update(input.Id, input);
