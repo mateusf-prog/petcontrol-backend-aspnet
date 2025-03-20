@@ -27,43 +27,42 @@ namespace UnitTests.Domain.Services
         }
 
         [Fact]
-        public async Task Add_GivenValidInput_ShouldAddAppointment()
+        public async Task Add_GivenInput_ShouldAddAppointment()
         {
             // Arrange
             var pet = new Faker<Pet>().Generate();
-            var validInput = new Faker<Appointment>()
+            var appointmentPetSupports = new Faker<AppointmentPetSupport>().Generate(2);
+            var input = new Faker<Appointment>()
                 .RuleFor(a => a.PetId, pet.Id)
+                .RuleFor(a => a.CustomerId, Guid.NewGuid)
                 .RuleFor(a => a.Date, DateTime.Now.AddDays(1))
-                .RuleFor(a => a.AppointmentPetSupports, [])
+                .RuleFor(a => a.AppointmentPetSupports, appointmentPetSupports)
                 .Generate();
             var pets = new List<Pet> { pet };
             var customer = new Faker<Customer>().UsePrivateConstructor().RuleFor(c => c.Pets, pets).Generate();
-            var petSupports = new Faker<PetSupport>().Generate(0);
-            var petSupportsIds = validInput.AppointmentPetSupports.Select(ps => ps.PetSupportId).ToList();
+            var petSupports = new Faker<PetSupport>().Generate(2);
+            var petSupportsIds = input.AppointmentPetSupports.Select(ps => ps.PetSupportId).ToList();
 
-            _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(validInput.CustomerId)).ReturnsAsync(customer);
+            _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(input.CustomerId)).ReturnsAsync(customer);
             _petSupportServiceMock.Setup(p => p.GetPetSupportsByIds(petSupportsIds)).ReturnsAsync(petSupports);
-            _repositoryMock.Setup(r => r.Add(validInput));
 
             // Act
-            await _service.Add(validInput);
+            await _service.Add(input);
 
             // Assert 
-            _repositoryMock.Verify(r => r.Add(validInput), Times.Once);
+            _repositoryMock.Verify(r => r.Add(input), Times.Once);
         }
 
         [Fact]
         public async Task Add_WhenCustomerNotFound_ShouldNotify()
         {
             // Arrange
-            var invalidInput = new Faker<Appointment>()
-                .RuleFor(a => a.Date, DateTime.Now.AddDays(1))
-                .Generate();
+            var input = AppointmentFaker.GetValidAppointmentFaker();
 
-            _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(invalidInput.CustomerId)).ReturnsAsync((Customer)null);
+            _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(input.CustomerId)).ReturnsAsync((Customer)null);
 
             // Act
-            await _service.Add(invalidInput);
+            await _service.Add(input);
 
             // Assert
             Assert.Contains("Customer not found", _notificator.GetNotifications().Select(n => n.Message));
@@ -77,19 +76,191 @@ namespace UnitTests.Domain.Services
             var customer = new Faker<Customer>()
                 .UsePrivateConstructor()
                 .RuleFor(c => c.Pets, [pet]).Generate();
-            var invalidInput = new Faker<Appointment>()
-                .RuleFor(a => a.Date, DateTime.Now.AddDays(1))
-                .RuleFor(a => a.PetId, Guid.NewGuid())
-                .Generate();
+            var input = AppointmentFaker.GetValidAppointmentFaker();
 
-            _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(invalidInput.CustomerId)).ReturnsAsync(customer);
+            _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(input.CustomerId)).ReturnsAsync(customer);
             _petSupportServiceMock.Setup(p => p.GetPetSupportsByIds(It.IsAny<List<Guid>>())).ReturnsAsync([]);
 
             // Act
-            await _service.Add(invalidInput);
+            await _service.Add(input);
 
             // Assert
             Assert.Contains("Pet not found", _notificator.GetNotifications().Select(n => n.Message));
+        }
+
+        [Fact]
+        public async Task Add_WhenPetSupportNotFound_ShouldNotify()
+        {
+            // Arrange
+            var pet = new Faker<Pet>().Generate();
+            var customer = new Faker<Customer>()
+                .UsePrivateConstructor()
+                .RuleFor(c => c.Pets, [pet]).Generate();
+            var petSupports = new Faker<PetSupport>().Generate(1);
+            var appointmentPetSupports = new Faker<AppointmentPetSupport>().Generate(2);
+            var input = new Faker<Appointment>()
+                .RuleFor(a => a.PetId, pet.Id)
+                .RuleFor(a => a.CustomerId, Guid.NewGuid)
+                .RuleFor(a => a.Date, DateTime.Now.AddDays(1))
+                .RuleFor(a => a.AppointmentPetSupports, appointmentPetSupports)
+                .Generate();
+
+            _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(input.CustomerId)).ReturnsAsync(customer);
+            _petSupportServiceMock.Setup(p => p.GetPetSupportsByIds(It.IsAny<List<Guid>>())).ReturnsAsync(petSupports);
+
+            // Act
+            await _service.Add(input);
+
+            // Assert
+            Assert.Contains("One or more PetSupports not found", _notificator.GetNotifications().Select(n => n.Message));
+        }
+
+        [Fact]
+        public async Task Add_WhenDateIsLessThanNow_ShouldNotify()
+        {
+            // Arrange
+            var appointmentPetSupports = new Faker<AppointmentPetSupport>().Generate(2);
+            var input = new Faker<Appointment>()
+                .RuleFor(a => a.PetId, Guid.NewGuid)
+                .RuleFor(a => a.CustomerId, Guid.NewGuid)
+                .RuleFor(a => a.Date, DateTime.Now.AddDays(-1))
+                .RuleFor(a => a.AppointmentPetSupports, appointmentPetSupports)
+                .Generate();
+
+            // Act
+            await _service.Add(input);
+
+            // Assert
+            Assert.Contains("The Date date must be greater than now", _notificator.GetNotifications().Select(n => n.Message));
+        }
+
+        [Fact]
+        public async Task Update_GivenInput_ShouldUpdateAppointment()
+        {
+            // Arrange
+            var pet = new Faker<Pet>().Generate();
+            var input = AppointmentFaker.GetValidAppointmentFaker();
+            var pets = new List<Pet> { pet };
+            var customer = new Faker<Customer>().UsePrivateConstructor().RuleFor(c => c.Pets, pets).Generate();
+            var petSupports = new Faker<PetSupport>().Generate(2);
+            var petSupportsIds = input.AppointmentPetSupports.Select(ps => ps.PetSupportId).ToList();
+
+            _repositoryMock.Setup(r => r.GetByIdWithPetSupport(input.Id)).ReturnsAsync(input);
+            _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(input.CustomerId)).ReturnsAsync(customer);
+            _petSupportServiceMock.Setup(p => p.GetPetSupportsByIds(petSupportsIds)).ReturnsAsync(petSupports);
+            _repositoryMock.Setup(r => r.Update(input));
+
+            // Act
+            await _service.Update(input.Id, input);
+
+            // Assert 
+            _repositoryMock.Verify(r => r.Update(input), Times.Once);
+        }
+
+        [Fact]
+        public async Task Update_WhenAppointmentNotFound_ShouldUpdateAppointment()
+        {
+            // Arrange
+            var pet = new Faker<Pet>().Generate();
+            var appointmentPetSupports = new Faker<AppointmentPetSupport>().Generate(2);
+            var input = new Faker<Appointment>()
+                .RuleFor(a => a.PetId, pet.Id)
+                .RuleFor(a => a.CustomerId, Guid.NewGuid)
+                .RuleFor(a => a.Date, DateTime.Now.AddDays(1))
+                .RuleFor(a => a.AppointmentPetSupports, appointmentPetSupports)
+                .Generate();
+            var pets = new List<Pet> { pet };
+            var customer = new Faker<Customer>().UsePrivateConstructor().RuleFor(c => c.Pets, pets).Generate();
+            var petSupports = new Faker<PetSupport>().Generate(0);
+            var petSupportsIds = input.AppointmentPetSupports.Select(ps => ps.PetSupportId).ToList();
+
+            _repositoryMock.Setup(r => r.GetByIdWithPetSupport(input.Id)).ReturnsAsync((Appointment)null);
+            _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(input.CustomerId)).ReturnsAsync(customer);
+            _petSupportServiceMock.Setup(p => p.GetPetSupportsByIds(petSupportsIds)).ReturnsAsync(petSupports);
+            _repositoryMock.Setup(r => r.Update(input));
+
+            // Act
+            await _service.Update(input.Id, input);
+
+            // Assert 
+            Assert.Contains("Appointment not found", _notificator.GetNotifications().Select(n => n.Message));
+        }
+
+        [Fact]
+        public async Task Update_WhenCustomerIsDifferent_ShouldNotify()
+        {
+            // Arrange
+            var appointmentPetSupports = new Faker<AppointmentPetSupport>().Generate(2);
+            var input = AppointmentFaker.GetValidAppointmentFaker();
+            var entityWithDifferentCustomer = AppointmentFaker.GetValidAppointmentFaker();
+
+            _repositoryMock.Setup(r => r.GetByIdWithPetSupport(input.Id)).ReturnsAsync(entityWithDifferentCustomer);
+
+            // Act
+            await _service.Update(input.Id, input);
+
+            // Assert
+            Assert.Contains("Customer cannot be changed", _notificator.GetNotifications().Select(n => n.Message));
+        }
+
+        [Fact]
+        public async Task Update_WhenPetSupportNotFound_ShouldNotify()
+        {
+            // Arrange
+            var pet = new Faker<Pet>().Generate();
+            var customer = new Faker<Customer>()
+                .UsePrivateConstructor()
+                .RuleFor(c => c.Pets, [pet]).Generate();
+            var petSupports = new Faker<PetSupport>().Generate(0);
+            var petSupportsIds = new List<Guid> { Guid.NewGuid() };
+            var appointmentPetSupports = new Faker<AppointmentPetSupport>().RuleFor(ps => ps.PetSupportId, petSupportsIds[0]).Generate(1);
+            var input = new Faker<Appointment>()
+                .RuleFor(a => a.PetId, pet.Id)
+                .RuleFor(a => a.CustomerId, customer.Id)
+                .RuleFor(a => a.Date, DateTime.Now.AddDays(1))
+                .RuleFor(a => a.AppointmentPetSupports, appointmentPetSupports)
+                .Generate();
+
+            _repositoryMock.Setup(r => r.GetByIdWithPetSupport(input.Id)).ReturnsAsync(input);
+            _customerRepositoryMock.Setup(c => c.GetCustomerWithPets(input.CustomerId)).ReturnsAsync(customer);
+            _petSupportServiceMock.Setup(p => p.GetPetSupportsByIds(petSupportsIds)).ReturnsAsync(petSupports);
+
+            // Act
+            await _service.Update(input.Id, input);
+
+            // Assert
+            Assert.Contains("One or more PetSupports not found", _notificator.GetNotifications().Select(n => n.Message));
+        }
+
+        [Fact]
+        public async Task Delete_GivenId_ShouldDeleteAppointment()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var appointment = new Faker<Appointment>().Generate();
+
+            _repositoryMock.Setup(r => r.GetById(id)).ReturnsAsync(appointment);
+
+            // Act
+            await _service.Delete(id);
+
+            // Assert
+            _repositoryMock.Verify(r => r.Remove(id), Times.Once);
+        }
+
+        [Fact]
+        public async Task Delete_WhenAppointmentNotFound_ShouldNotify()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+
+            _repositoryMock.Setup(r => r.GetById(id)).ReturnsAsync((Appointment)null);
+
+            // Act
+            await _service.Delete(id);
+
+            // Assert
+            Assert.Contains("Appointment not found", _notificator.GetNotifications().Select(n => n.Message));
         }
     }
 }
