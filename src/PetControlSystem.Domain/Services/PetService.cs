@@ -22,7 +22,7 @@ namespace PetControlSystem.Domain.Services
 
             if (await _customerRepository.GetById(pet.CustomerId) is null)
             {
-                Notify("There is no customer with this ID");
+                Notify("Customer not found");
                 return;
             }
 
@@ -39,17 +39,17 @@ namespace PetControlSystem.Domain.Services
         {
             if (!ExecuteValidation(new PetValidation(), input)) return;
 
-            if (await _customerRepository.GetById(input.CustomerId) is null)
-            {
-                Notify("There is no customer with this ID");
-                return;
-            }
-
             var result = await _repository.GetById(id);
 
             if (result is null)
             {
                 Notify("Pet not found");
+                return;
+            }
+
+            if (await _customerRepository.GetById(input.CustomerId) is null)
+            {
+                Notify("Customer not found");
                 return;
             }
 
