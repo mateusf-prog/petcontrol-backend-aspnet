@@ -12,7 +12,8 @@ namespace PetControlSystem.Domain.Services
 
         public AuthService(SignInManager<IdentityUser> signInManager, 
                             UserManager<IdentityUser> userManager, 
-                            ITokenService tokenService, INotificator notificator) : base(notificator)
+                            ITokenService tokenService, 
+                            INotificator notificator) : base(notificator)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -30,11 +31,13 @@ namespace PetControlSystem.Domain.Services
 
             var result = await _signInManager.PasswordSignInAsync(user.UserName, password, false, true);
 
-            if (result.Succeeded)
-                return _tokenService.GenerateToken(user);
+            if (!result.Succeeded)
+            {
+                Notify("Incorrect password.");
+                return string.Empty;
+            }
 
-            Notify("Incorrect password.");
-            return string.Empty;
+            return _tokenService.GenerateToken(user);
         }
 
         public async Task<string> Register(IdentityUser user)
