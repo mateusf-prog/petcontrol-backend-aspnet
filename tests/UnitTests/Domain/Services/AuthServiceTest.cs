@@ -83,5 +83,38 @@ namespace UnitTests.Domain.Services
             Assert.Equal(result, string.Empty);
             Assert.Equal("Incorrect password.", _notificator.GetNotifications().Select(n => n.Message).First());
         }
+
+        [Fact]
+        public async Task Register_WhenValidUser_ShouldReturnToken()
+        {
+            // Arrange
+            var user = IdentityUserFaker.GetIdentityUser();
+            
+            _userManager.Setup(u => u.CreateAsync(user, user.PasswordHash))
+                        .ReturnsAsync(IdentityResult.Success);
+
+            // Act
+            var result = await _authService.Register(user);
+
+            // Assert
+            Assert.Equal(_tokenService.Object.GenerateToken(user), result);
+        }
+
+        [Fact]
+        public async Task Register_WhenInvalidUser_ShouldError()
+        {
+            // Arrange
+            var user = IdentityUserFaker.GetIdentityUser();
+            
+            _userManager.Setup(u => u.CreateAsync(user, user.PasswordHash))
+                        .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Error" }));
+
+            // Act
+            var result = await _authService.Register(user);
+
+            // Assert
+            Assert.Equal("Error", _notificator.GetNotifications().Select(n => n.Message).First());
+            Assert.Equal(string.Empty, result);
+        }
     }
 }
