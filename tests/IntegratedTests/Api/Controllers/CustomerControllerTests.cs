@@ -1,6 +1,10 @@
 using FluentAssertions;
+using IntegratedTests.Seed;
 using IntegratedTests.Utils;
+using PetControlSystem.Api.Mappers;
+using PetControlSystem.Domain.Entities;
 using System.Net;
+using System.Net.Http.Json;
 
 namespace IntegratedTests.Api.Controllers;
 
@@ -20,27 +24,151 @@ public class CustomerControllerTest : IClassFixture<CustomWebApplicationFactory>
     public async Task GetAll_ShouldReturnOk_WhenCustomerExists()
     {
         // Arrange
-        await _factory.ResetDatabaseAsync();
+        var customer = GetFakerData.GetValidFakerCustomer();
+        await _factory.SeedCustomer(customer);
 
         // Act
         var response = await _client.GetAsync(CustomersApiUrl);
+        var content = await response.Content.ReadAsStringAsync();
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+        content.Should().Contain(customer.Name);
+        content.Should().Contain(customer.Email);
+        content.Should().Contain(customer.Phone);
+        content.Should().Contain(customer.Document);
+        content.Should().Contain(customer.Email);
     }
 
     [Fact]
     public async Task GetById_ShouldReturnOk_WhenCustomerExists()
     {
         // Arrange
-        var customerId = 1;
-        var url = $"{CustomersApiUrl}/{customerId}";
+        var customer = new Customer("name-test", "teste@email.com", "12345678900", "12345678900", null);
+        await _factory.SeedCustomer(customer);
+        var url = $"{CustomersApiUrl}/{customer.Id}";
+
+        // Act
+        var response = await _client.GetAsync(url);
+        var content = await response.Content.ReadAsStringAsync();
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        content.Should().Contain(customer.Name);
+        content.Should().Contain(customer.Email);
+        content.Should().Contain(customer.Phone);
+        content.Should().Contain(customer.Document);
+        content.Should().Contain(customer.Email);
+    }
+
+    [Fact]
+    public async Task GetById_ShouldReturnNotFound_WhenCustomerDoesNotExist()
+    {
+        // Arrange
+        var url = $"{CustomersApiUrl}/1";
 
         // Act
         var response = await _client.GetAsync(url);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnOk_WhenCustomerIsCreated()
+    {
+        // Arrange
+        var input = GetFakerData.GetValidFakerCustomer().ToDto();
+        var content = JsonContent.Create(input);
+        var url = CustomersApiUrl;
+
+        // Act
+        var response = await _client.PostAsync(url, content);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnBadRequest_WhenInputIsInvalid()
+    {
+        // Arrange
+        var address = GetFakerData.GetValidFakerAddress();
+        var input = new Customer("name", "invalid-email", "12890230942", "12890230942", address);
+        var content = JsonContent.Create(input);
+        var url = CustomersApiUrl;
+
+        // Act
+        var response = await _client.PostAsync(url, content);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Put_ShouldReturn204NoContent_WhenCustomerIsValidAndExistsOnDatabase()
+    {
+        // Arrange
+        var customerExistent = GetFakerData.GetValidFakerCustomer();
+        await _factory.SeedCustomer(customerExistent);
+        var address = GetFakerData.GetValidFakerAddress();
+        customerExistent.Update("name-updated", "email@updated.com", "00000000000", "92939495821", address);
+        var content = JsonContent.Create(customerExistent.ToDto());
+
+        var url = $"{CustomersApiUrl}/{customerExistent.Id}";
+
+        // Act
+        var response = await _client.PutAsync(url, content);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task Put_ShouldReturnBadRequest_WhenInputIsInvalid()
+    {
+        // Arrange
+        var customerExistent = GetFakerData.GetValidFakerCustomer();
+        var address = GetFakerData.GetValidFakerAddress();
+        customerExistent.Update("name-updated", "invalid-email-format", "00000000000", "92939495821", address);
+        var content = JsonContent.Create(customerExistent.ToDto());
+
+        var url = $"{CustomersApiUrl}/{customerExistent.Id}";
+
+        // Act
+        var response = await _client.PutAsync(url, content);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldReturnNoContent_WhenCustomerIsDeleted()
+    {
+        // Arrange
+        var customerExistent = GetFakerData.GetValidFakerCustomer();
+        await _factory.SeedCustomer(customerExistent);
+
+        var url = $"{CustomersApiUrl}/{customerExistent.Id}";
+
+        // Act
+        var response = await _client.DeleteAsync(url);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldReturnBadRequestAndNotification_WhenCustomerIsNotFound()
+    {
+        // Arrange
+        var url = $"{CustomersApiUrl}/{Guid.NewGuid()}";
+
+        // Act
+        var response = await _client.DeleteAsync(url);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     public async Task InitializeAsync()
