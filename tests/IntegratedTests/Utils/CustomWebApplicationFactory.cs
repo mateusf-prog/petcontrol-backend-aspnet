@@ -50,6 +50,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
         });
     }
 
+    public async Task Seed<T>(T entity) where T : class
+    {
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<MyDbContext>();
+        db.Set<T>().Add(entity);
+        await db.SaveChangesAsync();
+    }
+
     public async Task ResetDatabaseAsync()
     {
         var scope = Services.CreateScope();
