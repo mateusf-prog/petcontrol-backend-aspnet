@@ -24,7 +24,7 @@ public class CustomerControllerTest : IClassFixture<CustomWebApplicationFactory>
     public async Task GetAll_ShouldReturnOk_WhenCustomerExists()
     {
         // Arrange
-        var customer = GetFakerData.GetValidFakerCustomer();
+        var customer = FakerData.GetValidFakerCustomer();
         await _factory.Seed(customer);
 
         // Act
@@ -78,7 +78,7 @@ public class CustomerControllerTest : IClassFixture<CustomWebApplicationFactory>
     public async Task Create_ShouldReturnOk_WhenCustomerIsCreated()
     {
         // Arrange
-        var input = GetFakerData.GetValidFakerCustomer().ToDto();
+        var input = FakerData.GetValidFakerCustomer().ToDto();
         var content = JsonContent.Create(input);
         var url = CustomersApiUrl;
 
@@ -93,7 +93,7 @@ public class CustomerControllerTest : IClassFixture<CustomWebApplicationFactory>
     public async Task Create_ShouldReturnBadRequest_WhenInputIsInvalid()
     {
         // Arrange
-        var address = GetFakerData.GetValidFakerAddress();
+        var address = FakerData.GetValidFakerAddress();
         var input = new Customer("name", "invalid-email", "12890230942", "12890230942", address);
         var content = JsonContent.Create(input);
         var url = CustomersApiUrl;
@@ -109,9 +109,9 @@ public class CustomerControllerTest : IClassFixture<CustomWebApplicationFactory>
     public async Task Put_ShouldReturn204NoContent_WhenCustomerIsValidAndExistsOnDatabase()
     {
         // Arrange
-        var customerExistent = GetFakerData.GetValidFakerCustomer();
+        var customerExistent = FakerData.GetValidFakerCustomer();
         await _factory.Seed(customerExistent);
-        var address = GetFakerData.GetValidFakerAddress();
+        var address = FakerData.GetValidFakerAddress();
         customerExistent.Update("name-updated", "email@updated.com", "00000000000", "92939495821", address);
         var content = JsonContent.Create(customerExistent.ToDto());
 
@@ -128,8 +128,8 @@ public class CustomerControllerTest : IClassFixture<CustomWebApplicationFactory>
     public async Task Put_ShouldReturnBadRequest_WhenInputIsInvalid()
     {
         // Arrange
-        var customerExistent = GetFakerData.GetValidFakerCustomer();
-        var address = GetFakerData.GetValidFakerAddress();
+        var customerExistent = FakerData.GetValidFakerCustomer();
+        var address = FakerData.GetValidFakerAddress();
         customerExistent.Update("name-updated", "invalid-email-format", "00000000000", "92939495821", address);
         var content = JsonContent.Create(customerExistent.ToDto());
 
@@ -146,7 +146,7 @@ public class CustomerControllerTest : IClassFixture<CustomWebApplicationFactory>
     public async Task Delete_ShouldReturnNoContent_WhenCustomerIsDeleted()
     {
         // Arrange
-        var customerExistent = GetFakerData.GetValidFakerCustomer();
+        var customerExistent = FakerData.GetValidFakerCustomer();
         await _factory.Seed(customerExistent);
 
         var url = $"{CustomersApiUrl}/{customerExistent.Id}";
