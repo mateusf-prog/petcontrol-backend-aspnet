@@ -25,7 +25,7 @@ public class CustomerControllerTest : IClassFixture<CustomWebApplicationFactory>
     {
         // Arrange
         var customer = GetFakerData.GetValidFakerCustomer();
-        await _factory.SeedCustomer(customer);
+        await _factory.Seed(customer);
 
         // Act
         var response = await _client.GetAsync(CustomersApiUrl);
@@ -45,7 +45,7 @@ public class CustomerControllerTest : IClassFixture<CustomWebApplicationFactory>
     {
         // Arrange
         var customer = new Customer("name-test", "teste@email.com", "12345678900", "12345678900", null);
-        await _factory.SeedCustomer(customer);
+        await _factory.Seed(customer);
         var url = $"{CustomersApiUrl}/{customer.Id}";
 
         // Act
@@ -110,7 +110,7 @@ public class CustomerControllerTest : IClassFixture<CustomWebApplicationFactory>
     {
         // Arrange
         var customerExistent = GetFakerData.GetValidFakerCustomer();
-        await _factory.SeedCustomer(customerExistent);
+        await _factory.Seed(customerExistent);
         var address = GetFakerData.GetValidFakerAddress();
         customerExistent.Update("name-updated", "email@updated.com", "00000000000", "92939495821", address);
         var content = JsonContent.Create(customerExistent.ToDto());
@@ -147,7 +147,7 @@ public class CustomerControllerTest : IClassFixture<CustomWebApplicationFactory>
     {
         // Arrange
         var customerExistent = GetFakerData.GetValidFakerCustomer();
-        await _factory.SeedCustomer(customerExistent);
+        await _factory.Seed(customerExistent);
 
         var url = $"{CustomersApiUrl}/{customerExistent.Id}";
 
