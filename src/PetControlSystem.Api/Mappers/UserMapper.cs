@@ -11,6 +11,7 @@ namespace PetControlSystem.Api.Mappers
             {
                 UserName = userDto.UserName,
                 Email = userDto.Email,
+                NormalizedEmail = userDto.Email?.ToUpper(),
                 PhoneNumber = userDto.Phone,
                 PasswordHash = userDto.Password
             };
@@ -21,7 +22,8 @@ namespace PetControlSystem.Api.Mappers
             return new IdentityUser
             {
                 UserName = userLoginDto.Email,
-                PasswordHash = userLoginDto.Password
+                PasswordHash = userLoginDto.Password,
+                NormalizedEmail = userLoginDto.Email?.ToUpper()
             };
         }
     }
