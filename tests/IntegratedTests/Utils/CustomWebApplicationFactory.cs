@@ -53,9 +53,18 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
     public async Task Seed<T>(T entity) where T : class
     {
         using var scope = Services.CreateScope();
+
+        if (entity is IdentityUser)
+        { 
+            var user = entity as IdentityUser;
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        
+            var result = await userManager.CreateAsync(user, user.PasswordHash);
+            return;
+        }
         var db = scope.ServiceProvider.GetRequiredService<MyDbContext>();
         db.Set<T>().Add(entity);
-        await db.SaveChangesAsync();
+        await db.SaveChangesAsync();        
     }
 
     public async Task ResetDatabaseAsync()
@@ -75,6 +84,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
     public async Task DisposeAsync()
     {
+        await ResetDatabaseAsync();
         HttpClient.Dispose();
     }
 }
