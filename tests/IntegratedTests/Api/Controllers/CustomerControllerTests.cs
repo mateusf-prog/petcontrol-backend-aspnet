@@ -8,7 +8,8 @@ using System.Net.Http.Json;
 
 namespace IntegratedTests.Api.Controllers;
 
-public class CustomerControllerTest : IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
+[Collection("IntegratedTests")]
+public class CustomerControllerTest : IAsyncLifetime
 {
     private readonly CustomWebApplicationFactory _factory;
     private readonly HttpClient _client;

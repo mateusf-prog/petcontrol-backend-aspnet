@@ -3,12 +3,11 @@ using IntegratedTests.Seed;
 using IntegratedTests.Utils;
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 
 namespace IntegratedTests.Api.Controllers
 {
-    public class ProductControllerTest : IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
+    [Collection("IntegratedTests")]
+    public class ProductControllerTest : IAsyncLifetime
     {
         private readonly CustomWebApplicationFactory _factory;
         private readonly HttpClient _client;
