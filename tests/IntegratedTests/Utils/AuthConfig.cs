@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using PetControlSystem.Api.Dto;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -33,7 +34,33 @@ namespace IntegratedTests.Utils
             {
                 Id = "test-user-id",
                 UserName = "testuser",
-                Email = "testuser@example.com"
+                Email = "testuser@example.com",
+                PasswordHash = "Teste@Password123",
+                NormalizedEmail = "testuser@example.com"
+            };
+        }
+
+        public static UserDto GetValidUserDto()
+        {
+            return new UserDto()
+            {
+                Email = "testuser@example.com",
+                Password = "Teste@Password123",
+                ConfirmPassword = "Teste@Password123",
+                Phone = "1234567890",
+                UserName = "testuser"
+            };
+        }
+
+        public static UserDto GetInvalidUserDto()
+        {
+            return new UserDto()
+            {
+                Email = "wrong-email",
+                Password = "Teste@Password123",
+                ConfirmPassword = "Teste@Password123",
+                Phone = "1234567890",
+                UserName = "testuser"
             };
         }
     }
