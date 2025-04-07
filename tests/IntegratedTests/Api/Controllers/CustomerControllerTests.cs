@@ -25,7 +25,7 @@ public class CustomerControllerTest : IAsyncLifetime
     public async Task GetAll_ShouldReturnOk_WhenCustomerExists()
     {
         // Arrange
-        var customer = FakerData.GetValidFakerCustomer();
+        var customer = FakerData.GetCustomer();
         await _factory.Seed(customer);
 
         // Act
@@ -45,7 +45,7 @@ public class CustomerControllerTest : IAsyncLifetime
     public async Task GetById_ShouldReturnOk_WhenCustomerExists()
     {
         // Arrange
-        var customer = new Customer("name-test", "teste@email.com", "12345678900", "12345678900", null);
+        var customer = FakerData.GetCustomer();
         await _factory.Seed(customer);
         var url = $"{CustomersApiUrl}/{customer.Id}";
 
@@ -79,7 +79,7 @@ public class CustomerControllerTest : IAsyncLifetime
     public async Task Create_ShouldReturnOk_WhenCustomerIsCreated()
     {
         // Arrange
-        var input = FakerData.GetValidFakerCustomer().ToDto();
+        var input = FakerData.GetCustomer().ToDto();
         var content = JsonContent.Create(input);
         var url = CustomersApiUrl;
 
@@ -94,7 +94,7 @@ public class CustomerControllerTest : IAsyncLifetime
     public async Task Create_ShouldReturnBadRequest_WhenInputIsInvalid()
     {
         // Arrange
-        var address = FakerData.GetValidFakerAddress();
+        var address = FakerData.GetAddress();
         var input = new Customer("name", "invalid-email", "12890230942", "12890230942", address);
         var content = JsonContent.Create(input);
         var url = CustomersApiUrl;
@@ -110,9 +110,9 @@ public class CustomerControllerTest : IAsyncLifetime
     public async Task Put_ShouldReturn204NoContent_WhenCustomerIsValidAndExistsOnDatabase()
     {
         // Arrange
-        var customerExistent = FakerData.GetValidFakerCustomer();
+        var customerExistent = FakerData.GetCustomer();
         await _factory.Seed(customerExistent);
-        var address = FakerData.GetValidFakerAddress();
+        var address = FakerData.GetAddress();
         customerExistent.Update("name-updated", "email@updated.com", "00000000000", "92939495821", address);
         var content = JsonContent.Create(customerExistent.ToDto());
 
@@ -129,8 +129,8 @@ public class CustomerControllerTest : IAsyncLifetime
     public async Task Put_ShouldReturnBadRequest_WhenInputIsInvalid()
     {
         // Arrange
-        var customerExistent = FakerData.GetValidFakerCustomer();
-        var address = FakerData.GetValidFakerAddress();
+        var customerExistent = FakerData.GetCustomer();
+        var address = FakerData.GetAddress();
         customerExistent.Update("name-updated", "invalid-email-format", "00000000000", "92939495821", address);
         var content = JsonContent.Create(customerExistent.ToDto());
 
@@ -147,7 +147,7 @@ public class CustomerControllerTest : IAsyncLifetime
     public async Task Delete_ShouldReturnNoContent_WhenCustomerIsDeleted()
     {
         // Arrange
-        var customerExistent = FakerData.GetValidFakerCustomer();
+        var customerExistent = FakerData.GetCustomer();
         await _factory.Seed(customerExistent);
 
         var url = $"{CustomersApiUrl}/{customerExistent.Id}";
