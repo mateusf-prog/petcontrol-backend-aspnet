@@ -1,8 +1,4 @@
-﻿using PetControlSystem.Domain.Entities.Enums;
-using System.Numerics;
-using System.Reflection.Metadata;
-
-namespace PetControlSystem.Domain.Entities
+﻿namespace PetControlSystem.Domain.Entities
 {
     public class Pet : Entity
     {
