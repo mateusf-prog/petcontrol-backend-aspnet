@@ -23,7 +23,7 @@ namespace IntegratedTests.Api.Controllers
         public async Task GetAll_ShouldReturnOk_WhenProductExists()
         {
             // Act
-            var product = FakerData.GetValidFakerProduct();
+            var product = FakerData.GetProduct();
             await _factory.Seed(product);
 
             // Act
@@ -41,7 +41,7 @@ namespace IntegratedTests.Api.Controllers
         public async Task GetById_ShoudReturnOk_WhenProductExists()
         {
             // Act
-            var product = FakerData.GetValidFakerProduct();
+            var product = FakerData.GetProduct();
             await _factory.Seed(product);
             var url = $"{ProductsApiUrl}/{product.Id}";            
 
@@ -73,7 +73,7 @@ namespace IntegratedTests.Api.Controllers
         public async Task Create_ShouldReturnCreated_WhenProductIsValid()
         {
             // Arrange
-            var fakerProduct = FakerData.GetValidFakerProduct();
+            var fakerProduct = FakerData.GetProduct();
             var content = JsonContent.Create(fakerProduct);
 
             // Act
@@ -87,7 +87,7 @@ namespace IntegratedTests.Api.Controllers
         public async Task Create_ShouldReturnBadRequest_WhenProductIsInvalid()
         {
             // Arrange
-            var invalidProduct = FakerData.GetValidFakerProduct();
+            var invalidProduct = FakerData.GetProduct();
             invalidProduct.Update("", 0, 0, ""); 
             var content = JsonContent.Create(invalidProduct);
 
@@ -102,9 +102,9 @@ namespace IntegratedTests.Api.Controllers
         public async Task Update_ShouldReturnOk_WhenProductIsValid()
         {
             // Arrange
-            var product = FakerData.GetValidFakerProduct();
+            var product = FakerData.GetProduct();
             await _factory.Seed(product);
-            var updatedProduct = FakerData.GetValidFakerProduct();
+            var updatedProduct = FakerData.GetProduct();
             updatedProduct.Id = product.Id;
             var url = $"{ProductsApiUrl}/{product.Id}";
             var content = JsonContent.Create(updatedProduct);
@@ -120,7 +120,7 @@ namespace IntegratedTests.Api.Controllers
         public async Task Update_ShouldReturnNotFound_WhenProductNotExists()
         {
             // Arrange
-            var product = FakerData.GetValidFakerProduct();
+            var product = FakerData.GetProduct();
             var url = $"{ProductsApiUrl}/{Guid.NewGuid()}";
             var content = JsonContent.Create(product);
 
@@ -137,9 +137,9 @@ namespace IntegratedTests.Api.Controllers
         public async Task Update_ShouldReturnBadRequest_WhenProductIsInvalid()
         {
             // Arrange
-            var product = FakerData.GetValidFakerProduct();
+            var product = FakerData.GetProduct();
             await _factory.Seed(product);
-            var updatedProduct = FakerData.GetValidFakerProduct();
+            var updatedProduct = FakerData.GetProduct();
             updatedProduct.Id = product.Id;
             updatedProduct.Update("", 0, 0, "");
             var url = $"{ProductsApiUrl}/{product.Id}";
@@ -156,7 +156,7 @@ namespace IntegratedTests.Api.Controllers
         public async Task Delete_ShouldReturnNoContent_WhenProductExists()
         {
             // Arrange
-            var product = FakerData.GetValidFakerProduct();
+            var product = FakerData.GetProduct();
             await _factory.Seed(product);
             var url = $"{ProductsApiUrl}/{product.Id}";
 
