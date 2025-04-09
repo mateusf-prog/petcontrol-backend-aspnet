@@ -25,13 +25,11 @@
             AppointmentPetSupports = petSupports;
         }
 
-        public void Update(DateTime date, string? description, decimal? totalPrice, Guid customerId, Guid petid, List<AppointmentPetSupport> petSupports)
+        public void Update(DateTime date, string? description, decimal? totalPrice, List<AppointmentPetSupport> petSupports)
         {
             Date = date;
             Description = description;
             TotalPrice = totalPrice;
-            CustomerId = customerId;
-            PetId = petid;
             AppointmentPetSupports = petSupports;
         }
     }
