@@ -25,5 +25,20 @@ namespace IntegratedTests.Seed
             var customer = GetCustomer();
             return new Pet("dog-name", "dog-description", 30.0, customerId);
         }
+
+        public static Order GetOrder(Guid customerId)
+        {
+            return new Order(customerId, [], 1500.00m);
+        }
+
+        public static Appointment GetAppointment(Guid customerId, Guid petId)
+        {
+            return new Appointment(DateTime.Now.AddDays(1), "some-description", 1500m, customerId, petId, []);
+        }
+
+        public static PetSupport GetPetSupport()
+        {
+            return new PetSupport("some-name", 50.0m, 75.0m, 100m, []);
+        }
     }
 }
