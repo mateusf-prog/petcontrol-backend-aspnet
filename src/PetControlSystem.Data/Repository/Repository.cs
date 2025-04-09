@@ -28,7 +28,7 @@ namespace PetControlSystem.Data.Repository
 
         public virtual async Task<TEntity?> GetById(Guid id)
         {
-            return await DbSet.FindAsync(id);
+            return await DbSet.AsTracking().FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public Task Add(TEntity obj)
@@ -45,8 +45,12 @@ namespace PetControlSystem.Data.Repository
 
         public virtual async Task Remove(Guid id)
         {
-            DbSet.Remove(new TEntity { Id = id });
-            await SaveChanges();
+            var entity = await GetById(id);
+            if (entity != null)
+            {
+                DbSet.Remove(entity);
+                await SaveChanges();
+            }
         }
 
         public async Task<int> SaveChanges()
