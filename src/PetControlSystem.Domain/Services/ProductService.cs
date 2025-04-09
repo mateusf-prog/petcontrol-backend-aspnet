@@ -61,6 +61,23 @@ namespace PetControlSystem.Domain.Services
             await _repository.Remove(id);
         }
 
+        public async Task<List<Product>> GetProductsByIds(List<Guid> guids)
+        {
+            var products = new List<Product>();
+            foreach (Guid id in guids)
+            {
+                var product = await _repository.GetById(id);
+                if (product is null)
+                {
+                    Notify($"Product not found - ID {id}");
+                    return products;
+                }
+
+                products.Add(product);
+            }
+            return products;
+        }
+
         public void Dispose()
         {
             _repository?.Dispose();
