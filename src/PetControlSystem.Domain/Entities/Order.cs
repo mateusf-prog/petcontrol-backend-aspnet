@@ -19,10 +19,10 @@
             TotalPrice = totalPrice;
         }
 
-        public void Update(Customer customer, List<OrderProduct> orderProducts)
+        public void Update(List<OrderProduct> orderProducts)
         {
-            Customer = customer;
             OrderProducts = orderProducts;
+            TotalPrice = orderProducts.Sum(x => x.Price * x.Quantity);
         }
     }
 }
