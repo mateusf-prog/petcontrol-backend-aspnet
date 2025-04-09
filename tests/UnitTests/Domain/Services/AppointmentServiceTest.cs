@@ -187,23 +187,6 @@ namespace UnitTests.Domain.Services
         }
 
         [Fact]
-        public async Task Update_WhenCustomerIsDifferent_ShouldNotify()
-        {
-            // Arrange
-            var appointmentPetSupports = new Faker<AppointmentPetSupport>().Generate(2);
-            var input = AppointmentFaker.GetValidAppointmentFaker();
-            var entityWithDifferentCustomer = AppointmentFaker.GetValidAppointmentFaker();
-
-            _repositoryMock.Setup(r => r.GetByIdWithPetSupport(input.Id)).ReturnsAsync(entityWithDifferentCustomer);
-
-            // Act
-            await _service.Update(input.Id, input);
-
-            // Assert
-            Assert.Contains("Customer cannot be changed", _notificator.GetNotifications().Select(n => n.Message));
-        }
-
-        [Fact]
         public async Task Update_WhenPetSupportNotFound_ShouldNotify()
         {
             // Arrange

@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Moq;
 using PetControlSystem.Domain.Entities;
 using PetControlSystem.Domain.Interfaces;
@@ -113,7 +114,42 @@ namespace UnitTests.Domain.Services
         }
 
         [Fact]
-        public async Task Update_GivenValidOrder_ShouldUpdateOrder()
+        public async Task Update_WhenProductInsufficientStock_ShouldNotify()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var input = OrderFaker.GetValidOrderFaker();
+
+            _repositoryMock.Setup(r => r.GetById(id)).ReturnsAsync(new Order());
+            _productRepositoryMock.Setup(r => r.GetById(It.IsAny<Guid>())).ReturnsAsync(new Product());
+
+            // Act
+            await _service.Update(id, input);
+
+            // Assert
+            var notifications = _notificator.GetNotifications();
+            notifications[0].Message.Should().Contain("Insufficient stock of product");
+        }
+
+        [Fact]
+        public async Task Update_WhenOk_ShouldUpdateProduct()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var input = OrderFaker.GetValidOrderFaker();
+            var product = new Product("Food", 100, 10, "Description");
+            _repositoryMock.Setup(r => r.GetById(id)).ReturnsAsync(new Order());
+            _productRepositoryMock.Setup(r => r.GetById(It.IsAny<Guid>())).ReturnsAsync(product);
+
+            // Act
+            await _service.Update(id, input);
+
+            // Assert
+            _repositoryMock.Verify(r => r.Update(It.IsAny<Order>()), Times.AtLeastOnce);
+        }
+
+        [Fact]
+        public async Task Update_WhenProductNotFound_ShouldNotify()
         {
             // Arrange
             var id = Guid.NewGuid();
@@ -125,7 +161,8 @@ namespace UnitTests.Domain.Services
             await _service.Update(id, input);
 
             // Assert
-            _repositoryMock.Verify(r => r.Update(It.IsAny<Order>()), Times.AtLeastOnce);
+            var notifications = _notificator.GetNotifications();
+            notifications[0].Message.Should().Contain("Product not found");
         }
 
         [Fact]
