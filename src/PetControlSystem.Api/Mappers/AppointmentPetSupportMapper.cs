@@ -7,9 +7,11 @@ namespace PetControlSystem.Api.Mappers
     {
         public static AppointmentPetSupport ToEntity(this AppointmentPetSupportDto dto)
         {
-            return new AppointmentPetSupport(
-                dto.PetSupportId,
-                dto.Price);
+            return new AppointmentPetSupport
+            {
+                PetSupportId = dto.PetSupportId,
+                Price = dto.Price,
+            };
         }
 
         public static AppointmentPetSupportDto ToDto(this AppointmentPetSupport entity)
