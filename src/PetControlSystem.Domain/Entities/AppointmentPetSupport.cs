@@ -2,19 +2,20 @@
 {
     public class AppointmentPetSupport : Entity
     {
-        public Guid AppointmentId { get; private set; }
-        public Appointment Appointment { get; private set; }
+        public Guid AppointmentId { get; set; }
+        public Appointment Appointment { get; set; }
 
-        public Guid PetSupportId { get; private set; }
-        public PetSupport PetSupport { get; private set; }
+        public Guid PetSupportId { get; set; }
+        public PetSupport PetSupport { get; set; }
 
-        public decimal Price { get; private set; }
+        public decimal Price { get; set; }
 
         public AppointmentPetSupport() { }
 
-        public AppointmentPetSupport(Guid petSupportId, decimal price)
+        public AppointmentPetSupport(Guid petSupportId, Guid appointmentId, decimal price)
         {
             PetSupportId = petSupportId;
+            AppointmentId = appointmentId;
             Price = price;
         }
     }
