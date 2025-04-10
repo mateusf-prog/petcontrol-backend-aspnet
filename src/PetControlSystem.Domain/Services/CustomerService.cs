@@ -57,11 +57,16 @@ namespace PetControlSystem.Domain.Services
 
         public async Task Delete(Guid id)
         {
-            if (await _repository.GetById(id) is null)
+            var customer = await _repository.GetById(id);
+            if (customer is null)
             {
                 Notify("Customer not found");
                 return;
             }
+
+            // Set Address to null before deleting
+            customer.Update(customer.Name!, customer.Email!, customer.Phone!, customer.Document!, null);
+            await _repository.Update(customer);
 
             await _repository.Remove(id);
         }
