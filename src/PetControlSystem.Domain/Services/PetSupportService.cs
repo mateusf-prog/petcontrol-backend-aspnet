@@ -1,4 +1,5 @@
-﻿using PetControlSystem.Domain.Entities;
+﻿using Microsoft.IdentityModel.Tokens;
+using PetControlSystem.Domain.Entities;
 using PetControlSystem.Domain.Entities.Validations;
 using PetControlSystem.Domain.Interfaces;
 using PetControlSystem.Domain.Notifications;
@@ -25,7 +26,9 @@ namespace PetControlSystem.Domain.Services
                 return;
             }
 
-            if (await _repository.Get(ps => ps.Name == input.Name) != null)
+            var petSupport = await _repository.Get(ps => ps.Name == input.Name);
+
+            if (!petSupport.IsNullOrEmpty())
             {
                 Notify("There is already a pet with this name");
                 return;
