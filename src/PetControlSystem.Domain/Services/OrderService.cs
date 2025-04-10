@@ -64,13 +64,29 @@ namespace PetControlSystem.Domain.Services
             if (!ExecuteValidation(new OrderValidation(), input)) return;
 
             var result = await _repository.GetById(id);
+
             if (result is null)
             {
                 Notify("Order not found");
                 return;
             }
 
-            result.Update(input.Customer, input.OrderProducts);
+            foreach(var product in input.OrderProducts)
+            {
+                var productEntity = await _productRepository.GetById(product.ProductId);
+                if (productEntity is null)
+                {
+                    Notify($"Product not found - ID {product.ProductId}");
+                    return;
+                }
+                if (productEntity.Stock < product.Quantity)
+                {
+                    Notify($"Insufficient stock of product - {product.ProductId}");
+                    return;
+                }
+            }
+
+            result.Update(input.OrderProducts);
 
             await _repository.Update(result);
         }
