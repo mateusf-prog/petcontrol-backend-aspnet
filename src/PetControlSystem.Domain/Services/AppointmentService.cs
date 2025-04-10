@@ -61,30 +61,30 @@ namespace PetControlSystem.Domain.Services
                 return;
             }
 
-            if (result.CustomerId != input.CustomerId)
+            var petSupportIds = input.AppointmentPetSupports.Select(ps => ps.PetSupportId).ToList();
+            var petSupports = await _petSupportService.GetPetSupportsByIds(petSupportIds);
+            if (petSupports.Count != petSupportIds.Count)
             {
-                Notify("Customer cannot be changed");
+                Notify("One or more PetSupports not found");
                 return;
+            }
+
+            foreach (var petSupport in result.AppointmentPetSupports.ToList())
+            {
+                result.AppointmentPetSupports.Remove(petSupport);
             }
 
             foreach (var petSupport in input.AppointmentPetSupports)
             {
-                var petSupportIds = input.AppointmentPetSupports.Select(ps => ps.PetSupportId).ToList();
-                var petSupports = await _petSupportService.GetPetSupportsByIds(petSupportIds);
+                var newPetSupport = new AppointmentPetSupport(
+                        petSupport.PetSupportId,
+                        result.Id, 
+                        petSupport.Price);
 
-                if (petSupports.Count != petSupportIds.Count)
-                {
-                    Notify("One or more PetSupports not found");
-                    return;
-                }
-
-                if (!result.AppointmentPetSupports.Any(ps => ps.PetSupportId == petSupport.PetSupportId))
-                {
-                    result.AppointmentPetSupports.Add(petSupport);
-                }
+                result.AppointmentPetSupports.Add(newPetSupport);
             }
 
-            result.Update(input.Date, input.Description, input.TotalPrice, input.CustomerId, input.PetId, result.AppointmentPetSupports);
+            result.Update(input.Date, input.Description, input.TotalPrice, result.AppointmentPetSupports);
 
             await _repository.Update(result);
         }
